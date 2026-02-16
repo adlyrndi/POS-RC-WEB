@@ -57,31 +57,29 @@ export default function DashboardHome() {
         return acc + (Array.isArray(itemsArray) ? itemsArray.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0);
     }, 0);
 
-    // Mock Gender Demographics (Today)
-    // Since we don't have gender data, we'll derive a semi-random but stable split based on tenantId
-    const malePercent = 55; // Default for demo
-    const femalePercent = 45;
-
-    // Item Category Demographics (Today)
-    const categoryTotals = {};
+    // Item Product Demographics (Today)
+    const itemTotals = {};
     todayTx.forEach(tx => {
         const items = tx.transaction_items || tx.items || [];
         const itemsArray = typeof items === 'string' ? JSON.parse(items) : items;
         if (Array.isArray(itemsArray)) {
             itemsArray.forEach(item => {
-                const cat = item.category || 'Uncategorized';
-                categoryTotals[cat] = (categoryTotals[cat] || 0) + (item.quantity || 0);
+                const title = item.product_title || item.title || 'Unknown Product';
+                itemTotals[title] = (itemTotals[title] || 0) + (item.quantity || 0);
             });
         }
     });
 
-    const categories = Object.entries(categoryTotals)
+    const topItems = Object.entries(itemTotals)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 2); // Top 2
+        .slice(0, 2); // Get top 2 best sellers
 
-    const topCategory = categories[0] || ['No Sales', 0];
-    const totalSoldToday = Object.values(categoryTotals).reduce((a, b) => a + b, 0) || 1;
-    const topCatPercent = Math.round((topCategory[1] / totalSoldToday) * 100);
+    // Mock Gender Demographics (Today)
+    const totalSoldToday = productsSoldToday || 1;
+    const maleCount = Math.ceil(totalSoldToday * 0.55);
+    const femaleCount = totalSoldToday - maleCount;
+    const malePercent = Math.round((maleCount / totalSoldToday) * 100);
+    const femalePercent = 100 - malePercent;
 
     return (
         <div className={styles.container}>
@@ -109,7 +107,7 @@ export default function DashboardHome() {
                     />
                 </div>
 
-                {/* Demographics Grid - New Section */}
+                {/* Demographics Grid - Re-Updated Section */}
                 <div className={styles.demoGrid}>
                     <div className={styles.demoCard}>
                         <div className={styles.demoHeader}>
@@ -120,18 +118,18 @@ export default function DashboardHome() {
                         </div>
                         <div className={styles.demoBody}>
                             <div className={styles.demoStatRow}>
-                                <span className={styles.demoLabel}>Male</span>
-                                <span className={styles.demoPercent}>{malePercent}%</span>
+                                <span className={styles.demoLabel}>Male ({maleCount})</span>
+                                <span className={styles.demoPercent} style={{ color: '#6366F1' }}>{malePercent}%</span>
                             </div>
                             <div className={styles.progressBarWrap}>
-                                <div className={styles.progressBar} style={{ width: `${malePercent}%`, background: '#6366F1' }} />
+                                <div className={styles.progressBar} style={{ width: `${malePercent}%`, background: 'linear-gradient(90deg, #6366F1, #818CF8)' }} />
                             </div>
                             <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
-                                <span className={styles.demoLabel}>Female</span>
-                                <span className={styles.demoPercent}>{femalePercent}%</span>
+                                <span className={styles.demoLabel}>Female ({femaleCount})</span>
+                                <span className={styles.demoPercent} style={{ color: '#22D3EE' }}>{femalePercent}%</span>
                             </div>
                             <div className={styles.progressBarWrap}>
-                                <div className={styles.progressBar} style={{ width: `${femalePercent}%`, background: '#F472B6' }} />
+                                <div className={styles.progressBar} style={{ width: `${femalePercent}%`, background: 'linear-gradient(90deg, #22D3EE, #67E8F9)' }} />
                             </div>
                         </div>
                     </div>
@@ -141,22 +139,36 @@ export default function DashboardHome() {
                             <div className={styles.demoIcon} style={{ background: '#ECFDF5', color: '#10B981' }}>
                                 <IoShapes size={20} />
                             </div>
-                            <span className={styles.demoTitle}>Top Category (Today)</span>
+                            <span className={styles.demoTitle}>Top Products (Today)</span>
                         </div>
                         <div className={styles.demoBody}>
-                            <div className={styles.demoStatRow}>
-                                <span className={styles.demoLabel}>{topCategory[0]}</span>
-                                <span className={styles.demoPercent}>{topCatPercent}%</span>
-                            </div>
-                            <div className={styles.progressBarWrap}>
-                                <div className={styles.progressBar} style={{ width: `${topCatPercent}%`, background: '#10B981' }} />
-                            </div>
-                            <p className={styles.demoSubtext}>{topCategory[1]} items sold today</p>
-
-                            <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
-                                <span className={styles.demoLabel}>Total Items Sold</span>
-                                <span className={styles.demoPercent} style={{ color: 'var(--text)' }}>{productsSoldToday}</span>
-                            </div>
+                            {topItems.length === 0 ? (
+                                <p className={styles.emptyText}>No sales yet</p>
+                            ) : (
+                                topItems.map(([name, sold], idx) => {
+                                    const percent = Math.round((sold / totalSoldToday) * 100);
+                                    return (
+                                        <div key={name} style={{ marginTop: idx === 0 ? 0 : 12 }}>
+                                            <div className={styles.demoStatRow}>
+                                                <span className={styles.demoLabel} style={{ maxWidth: '75%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                    {name}
+                                                </span>
+                                                <span className={styles.demoPercent}>{percent}%</span>
+                                            </div>
+                                            <div className={styles.progressBarWrap}>
+                                                <div
+                                                    className={styles.progressBar}
+                                                    style={{
+                                                        width: `${percent}%`,
+                                                        background: idx === 0 ? 'linear-gradient(90deg, #6366F1, #818CF8)' : 'linear-gradient(90deg, #22D3EE, #67E8F9)'
+                                                    }}
+                                                />
+                                            </div>
+                                            <p className={styles.demoSubtext}>{sold} sold today</p>
+                                        </div>
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
                 </div>
