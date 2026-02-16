@@ -145,3 +145,65 @@
 .trendText {
     color: #4ADE80;
 }
+
+/* ─── iPad / Tablet (768px - 1024px) ─── */
+@media (max-width: 1024px) {
+    .card {
+        padding: 32px;
+        min-height: 240px;
+    }
+
+    .amount {
+        font-size: 44px;
+    }
+}
+
+/* ─── Mobile (< 768px) ─── */
+@media (max-width: 768px) {
+    .card {
+        padding: 24px;
+        min-height: 200px;
+        border-radius: 20px;
+    }
+
+    .title {
+        font-size: 12px;
+    }
+
+    .amountRow {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .amount {
+        font-size: 32px;
+        letter-spacing: -1px;
+    }
+
+    .eyeBtn {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .statItem {
+        font-size: 14px;
+    }
+
+    .trendBadge {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ─── Small Mobile (< 360px) ─── */
+@media (max-width: 360px) {
+    .amount {
+        font-size: 28px;
+    }
+
+    .statsRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}

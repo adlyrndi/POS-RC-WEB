@@ -160,7 +160,7 @@ export default function DashboardHome() {
                                                     className={styles.progressBar}
                                                     style={{
                                                         width: `${percent}%`,
-                                                        background: idx === 0 ? 'linear-gradient(90deg, #6366F1, #818CF8)' : 'linear-gradient(90deg, #22D3EE, #67E8F9)'
+                                                        background: idx === 0 ? 'linear-gradient(90deg, #1E3A8A, #1E40AF)' : 'linear-gradient(90deg, #3B82F6, #60A5FA)'
                                                     }}
                                                 />
                                             </div>
