@@ -191,13 +191,23 @@ export default function DashboardHome() {
                 </div>
 
                 {/* Recent Transactions */}
-                <h2 className={styles.sectionTitle} style={{ marginTop: 32 }}>Recent Transactions</h2>
+                <div className={styles.sectionHeader} style={{ marginTop: 32 }}>
+                    <h2 className={styles.sectionTitle}>Recent Transactions</h2>
+                    <Link href="/dashboard/transactions" className={styles.seeAll}>
+                        See All
+                    </Link>
+                </div>
+
                 <div className={styles.txList}>
                     {recentTx.length === 0 ? (
                         <p className={styles.emptyText}>No transactions yet</p>
                     ) : (
                         recentTx.slice(0, 10).map((tx) => (
-                            <div key={tx.id} className={styles.txCard}>
+                            <Link
+                                href={`/dashboard/transactions?id=${tx.id}`}
+                                key={tx.id}
+                                className={styles.txCard}
+                            >
                                 <div className={styles.txLeft}>
                                     <p className={styles.txCode}>{tx.transaction_code}</p>
                                     <p className={styles.txDate}>{formatDate(tx.created_at)} • {formatTime(tx.created_at)}</p>
@@ -206,7 +216,7 @@ export default function DashboardHome() {
                                     <p className={styles.txAmount}>{formatCurrency(tx.total)}</p>
                                     <span className={styles.txBadge}>{tx.payment_method}</span>
                                 </div>
-                            </div>
+                            </Link>
                         ))
                     )}
                 </div>

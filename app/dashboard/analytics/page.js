@@ -119,25 +119,26 @@ export default function AnalyticsPage() {
                 {/* Sales by Hour Chart */}
                 <div className={styles.chartCard} style={{ marginTop: 24 }}>
                     <h3 className={styles.cardTitle}>Sales by Hour (Revenue)</h3>
-                    <div className={styles.barChart}>
-                        {stats.salesByHour.map((val, i) => (
-                            <div key={i} className={styles.barCol} title={`${i}:00 - ${formatCurrency(val)}`}>
-                                {stats.itemsByHour[i] > 0 && (
-                                    <span className={styles.barTopLabel}>
-                                        {stats.itemsByHour[i]} items
-                                    </span>
-                                )}
-                                <div
-                                    className={styles.bar}
-                                    style={{
-                                        height: `${Math.max((val / maxSale) * 100, 4)}%`,
-                                        background: val > 0 ? (i % 2 === 0 ? '#6366F1' : '#22D3EE') : '#E5E7EB',
-                                        width: '24px'
-                                    }}
-                                />
-                                <span className={styles.barLabel}>{i}</span>
-                            </div>
-                        ))}
+                    <div className={styles.chartContainer}>
+                        <div className={styles.barChart}>
+                            {stats.salesByHour.map((val, i) => (
+                                <div key={i} className={styles.barCol} title={`${i}:00 - ${formatCurrency(val)}`}>
+                                    {stats.itemsByHour[i] > 0 && (
+                                        <span className={styles.barTopLabel}>
+                                            {stats.itemsByHour[i]} items
+                                        </span>
+                                    )}
+                                    <div
+                                        className={styles.bar}
+                                        style={{
+                                            '--val': `${Math.max((val / maxSale) * 100, 4)}%`,
+                                            background: val > 0 ? (i % 2 === 0 ? '#6366F1' : '#22D3EE') : '#E5E7EB',
+                                        }}
+                                    />
+                                    <span className={styles.barLabel}>{i}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useContext, useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { transactionService } from '@/services/api';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
@@ -11,6 +12,7 @@ const formatDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digi
 const formatTime = (d) => new Date(d).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
 export default function TransactionHistoryPage() {
+    const searchParams = useSearchParams();
     const { tenantId } = useContext(AuthContext);
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,12 +24,18 @@ export default function TransactionHistoryPage() {
             const res = await transactionService.getTransactions(tenantId);
             const sorted = (res.data || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             setTransactions(sorted);
+
+            // Handle query param for detail expansion
+            const targetId = searchParams.get('id');
+            if (targetId) {
+                setExpandedId(targetId);
+            }
         } catch (err) {
             console.error(err);
         } finally {
             setLoading(false);
         }
-    }, [tenantId]);
+    }, [tenantId, searchParams]);
 
     useEffect(() => { fetchTransactions(); }, [fetchTransactions]);
 
@@ -52,7 +60,7 @@ export default function TransactionHistoryPage() {
                 ) : (
                     <div className={styles.txList}>
                         {transactions.map((tx) => {
-                            const isExpanded = expandedId === tx.id;
+                            const isExpanded = expandedId?.toString() === tx.id.toString();
                             return (
                                 <div key={tx.id} className={styles.txCard}>
                                     <button className={styles.txHeader} onClick={() => setExpandedId(isExpanded ? null : tx.id)}>

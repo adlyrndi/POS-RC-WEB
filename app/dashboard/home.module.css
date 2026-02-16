@@ -81,7 +81,24 @@
     font-size: 18px;
     font-weight: 800;
     color: var(--text);
-    margin-bottom: 16px;
+    margin-bottom: 0px;
+    /* Reset so header handles spacing */
+}
+
+.seeAll {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-lg);
+    background: var(--primary-bg);
+    transition: all 0.2s;
+}
+
+.seeAll:hover {
+    background: var(--primary);
+    color: white;
 }
 
 .eyeBtn {
@@ -363,10 +380,14 @@
     }
 }
 
-/* ─── Mobile (< 768px) ─── */
-@media (max-width: 768px) {
+/* ─── Standard Mobile (< 768px) ─── */
+@media (max-width: 767px) {
     .header {
         padding: 32px 20px 28px;
+    }
+
+    .userName {
+        font-size: 24px;
     }
 
     .content {
@@ -376,16 +397,71 @@
     .summaryGrid,
     .demoGrid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .summaryValue {
+        font-size: 20px;
     }
 
     .quickGrid {
         grid-template-columns: 1fr 1fr;
     }
+
+    .quickCard {
+        padding: 16px;
+        font-size: 13px;
+    }
 }
 
-/* ─── Small Mobile (< 400px) ─── */
-@media (max-width: 400px) {
+/* ─── Small Phone (< 500px) ─── */
+@media (max-width: 500px) {
+    .userName {
+        font-size: 22px;
+    }
+
+    .content {
+        padding: 16px 12px 32px;
+    }
+
+    .summaryCard {
+        padding: 16px;
+    }
+
+    .summaryValue {
+        font-size: 18px;
+    }
+
+    .demoCard {
+        padding: 16px;
+    }
+
+    .quickGrid {
+        gap: 10px;
+    }
+
+    .quickCard {
+        padding: 14px;
+        font-size: 12px;
+        gap: 8px;
+    }
+}
+
+/* ─── Extra Tiny Phone (< 360px) ─── */
+@media (max-width: 360px) {
+    .userName {
+        font-size: 20px;
+    }
+
+    .summaryValue {
+        font-size: 16px;
+    }
+
     .quickGrid {
         grid-template-columns: 1fr;
+    }
+
+    .sectionTitle {
+        font-size: 16px;
     }
 }
