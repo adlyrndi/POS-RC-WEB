@@ -1,0 +1,106 @@
+.container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.card {
+    max-width: 440px;
+    width: 100%;
+    background: var(--card);
+    border-radius: var(--radius-2xl);
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.iconWrap {
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+}
+
+.details {
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.discountValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--danger);
+}
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+}
+
+.totalRow {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 0;
+}
+
+.backBtn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--gradient);
+    color: #FFF;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: var(--radius-lg);
+    transition: opacity 0.2s;
+}
+
+.backBtn:hover {
+    opacity: 0.9;
+}

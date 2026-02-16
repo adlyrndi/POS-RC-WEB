@@ -1,0 +1,140 @@
+.card {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    border-radius: 24px;
+    padding: 32px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 20px 25px -5px rgba(30, 64, 175, 0.4),
+        0 10px 10px -5px rgba(30, 64, 175, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 240px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 25px 30px -5px rgba(30, 64, 175, 0.5),
+        0 15px 15px -5px rgba(30, 64, 175, 0.3);
+}
+
+/* 3D Decorative Elements */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -40px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.header {
+    position: relative;
+    z-index: 2;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: 600;
+    opacity: 0.95;
+    letter-spacing: 0.5px;
+}
+
+.amountRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.amount {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.eyeBtn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 14px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    backdrop-filter: blur(8px);
+}
+
+.eyeBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.eyeBtn:active {
+    transform: scale(0.95);
+}
+
+.statsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+}
+
+.leftStats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.statItem {
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.trendBadge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    /* background: rgba(0, 0, 0, 0.2); */
+    /* Removed background to look cleaner like reference */
+    padding: 6px 0;
+    border-radius: 20px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.trendText {
+    color: #4ADE80;
+    /* Bright green */
+}

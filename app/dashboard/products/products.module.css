@@ -1,0 +1,344 @@
+.container {
+    min-height: 100vh;
+    position: relative;
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.header {
+    background: var(--gradient);
+    padding: 32px 32px 28px;
+    border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.headerDecor {
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.headerTitle {
+    font-size: 24px;
+    font-weight: 800;
+    color: #FFF;
+    position: relative;
+    z-index: 2;
+}
+
+.headerSub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+    position: relative;
+    z-index: 2;
+}
+
+.content {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.productCard {
+    background: var(--card);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.productCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.imageWrap {
+    width: 100%;
+    height: 180px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+.productImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border-light);
+}
+
+.stockBadge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.stockLow {
+    background: var(--danger);
+    color: #FFF;
+}
+
+.deleteFloat {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--danger);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    transition: opacity 0.2s;
+}
+
+.deleteFloat:hover {
+    opacity: 0.85;
+}
+
+.productInfo {
+    display: block;
+    padding: 14px 16px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.productInfo:hover {
+    background: var(--bg);
+}
+
+.productName {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.productPrice {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-primary);
+    z-index: 40;
+    transition: transform 0.2s;
+}
+
+.fab:hover {
+    transform: scale(1.05);
+}
+
+/* Form */
+.formGroup {
+    margin-bottom: 16px;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.previewWrap {
+    width: 100%;
+    height: 160px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.removeImageBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.uploadArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 100px;
+    border: 2px dashed var(--primary-border);
+    border-radius: var(--radius-xl);
+    background: var(--primary-bg);
+    cursor: pointer;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    transition: background 0.2s;
+}
+
+.uploadArea:hover {
+    background: var(--primary-hover);
+}
+
+.deleteBtnFull {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: var(--radius-lg);
+    background: var(--danger-bg);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--danger);
+    transition: opacity 0.2s;
+}
+
+.deleteBtnFull:hover {
+    opacity: 0.8;
+}
+
+.deleteBtnFull:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.empty {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--text-secondary);
+}
+
+.emptyIcon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* ─── iPad / Tablet ─── */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .imageWrap {
+        height: 160px;
+    }
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+    .header {
+        padding: 24px 20px;
+    }
+
+    .content {
+        padding: 20px 16px 120px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .imageWrap {
+        height: 140px;
+    }
+
+    .productName {
+        font-size: 14px;
+    }
+
+    .fab {
+        bottom: 88px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

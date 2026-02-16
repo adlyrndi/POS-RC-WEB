@@ -1,0 +1,210 @@
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+/* ─── Loader ────────────────────── */
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: var(--bg);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Sidebar (Desktop) ────────── */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+}
+
+.sidebarHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px 24px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 16px;
+}
+
+.sidebarLogo {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sidebarBrand {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.sidebarTenant {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 1px;
+}
+
+.sidebarNav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.sidebarLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.sidebarLink:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.sidebarLinkActive {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.sidebarLinkActive:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    color: var(--danger);
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.logoutBtn:hover {
+    background: var(--danger-bg);
+}
+
+/* ─── Main Content ──────────────── */
+.main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    padding-bottom: 0;
+}
+
+/* ─── Bottom Nav (Mobile) ───────── */
+.bottomNav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--bg-white);
+    border-top: 1px solid var(--border-light);
+    z-index: 50;
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottomNavItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    color: var(--text-tertiary);
+    transition: color 0.2s;
+    padding: 8px 0;
+}
+
+.bottomNavItemActive {
+    color: var(--primary);
+}
+
+.bottomNavLabel {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ─── iPad Landscape (sidebar narrower) ─── */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .sidebar {
+        width: 220px;
+        padding: 20px 12px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+    .sidebarBrand {
+        font-size: 14px;
+    }
+
+    .sidebarLink {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ─── Mobile / iPad Portrait ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 8px);
+    }
+
+    .bottomNav {
+        display: flex;
+        align-items: center;
+    }
+}
