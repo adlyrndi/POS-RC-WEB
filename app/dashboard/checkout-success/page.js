@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Suspense } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import styles from './success.module.css';

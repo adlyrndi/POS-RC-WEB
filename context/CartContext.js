@@ -12,6 +12,7 @@ export const CartProvider = ({ children }) => {
     const [paymentMethod, setPaymentMethod] = useState('Cash');
 
     const addItem = useCallback((product) => {
+        if (!product || !product.id) return;
         setItems((prev) => {
             const existing = prev.find((i) => i.product_id === product.id);
             if (existing) {
@@ -25,11 +26,11 @@ export const CartProvider = ({ children }) => {
                 ...prev,
                 {
                     product_id: product.id,
-                    title: product.title,
-                    price: product.price,
+                    title: product.title || 'Product',
+                    price: Number(product.price) || 0,
                     quantity: 1,
-                    stock: product.stock,
-                    image_url: product.image_url,
+                    stock: product.stock || 0,
+                    image_url: product.image_url || '',
                 },
             ];
         });

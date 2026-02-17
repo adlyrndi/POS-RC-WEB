@@ -58,6 +58,7 @@ export default function CartPage() {
                 voucher_id: voucher?.id || null,
             };
             const res = await transactionService.createTransaction(txData);
+            const transaction = res.data;
             const summary = items.map(i => `${i.quantity} ${i.title}`).join(', ');
             clearCart();
             router.push(`/dashboard/checkout-success?code=${transaction.transaction_code}&method=${paymentMethod}&subtotal=${subtotal}&discount=${discount}&total=${total}&male=${maleCount}&female=${femaleCount}&items=${itemCount}&summary=${encodeURIComponent(summary)}`);

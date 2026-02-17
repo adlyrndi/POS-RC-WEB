@@ -2,6 +2,7 @@
 
 import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { AuthContext, AuthProvider } from '@/context/AuthContext';
 import GradientButton from '@/components/GradientButton';
 import styles from './signup.module.css';
@@ -44,12 +45,13 @@ function SignupForm() {
                 <div className={styles.header}>
                     <div className={styles.headerDecoration} />
                     <div className={styles.logoCircle}>
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="8.5" cy="7" r="4" />
-                            <line x1="20" y1="8" x2="20" y2="14" />
-                            <line x1="23" y1="11" x2="17" y2="11" />
-                        </svg>
+                        <Image
+                            src="/MarkLogo-black.png"
+                            alt="Logo"
+                            width={42}
+                            height={42}
+                            priority
+                        />
                     </div>
                     <h1 className={styles.brand}>Create Account</h1>
                     <p className={styles.subtitle}>Set up your business</p>

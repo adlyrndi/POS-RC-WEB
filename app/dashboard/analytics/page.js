@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
                                 <div key={i} className={styles.barCol} title={`${i}:00 - ${formatCurrency(val)}`}>
                                     {stats.itemsByHour[i] > 0 && (
                                         <span className={styles.barTopLabel}>
-                                            {stats.itemsByHour[i]} items
+                                            {stats.itemsByHour[i]}
                                         </span>
                                     )}
                                     <div

@@ -9,6 +9,18 @@ import { IoSearchOutline, IoAdd, IoRemove, IoCartOutline, IoCube } from 'react-i
 import styles from './pos.module.css';
 
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const BACKEND_URL = 'https://pos-rc-backend-production.up.railway.app';
+
+const getImageUrl = (url) => {
+    if (!url) return '';
+    // If it's already a full URL, ensure it uses HTTPS and the production domain if it's pointing to localhost
+    if (url.startsWith('http')) {
+        return url.replace(/http:\/\/localhost:(8080|3000)/, BACKEND_URL)
+            .replace('http://pos-rc-backend-production.up.railway.app', BACKEND_URL);
+    }
+    // For relative paths, prepend the backend production URL
+    return `${BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 export default function POSPage() {
     const { tenantId } = useContext(AuthContext);
@@ -75,50 +87,53 @@ export default function POSPage() {
                             const qty = getCartQuantity(product.id);
                             return (
                                 <div key={product.id} className={styles.productCard}>
-                                    <div className={styles.imageWrap}>
+                                    <div className={styles.imageContainer}>
                                         {product.image_url ? (
-                                            <img src={product.image_url} alt={product.title} className={styles.productImage} />
+                                            <img src={getImageUrl(product.image_url)} alt={product.title} className={styles.productImage} />
                                         ) : (
                                             <div className={styles.imagePlaceholder}>
-                                                <IoCube size={32} color="#94A3B8" />
+                                                <IoCube size={32} color="#CBD5E1" />
                                             </div>
                                         )}
-                                        <span className={`${styles.stockBadge} ${product.stock <= 5 && product.stock > 0 ? styles.stockLow : ''} ${product.stock === 0 ? styles.stockOut : ''}`}>
-                                            Stock: {product.stock}
+
+                                        {/* Stock Badge - Top Left */}
+                                        <span className={`${styles.stockBadge} ${product.stock <= 5 ? styles.stockLow : ''} ${product.stock === 0 ? styles.stockOut : ''}`}>
+                                            Stock : {product.stock}
                                         </span>
-                                    </div>
-                                    <div className={styles.productInfo}>
-                                        <p className={styles.productName}>{product.title}</p>
-                                        <p className={styles.productPrice}>{formatCurrency(product.price)}</p>
-                                    </div>
-                                    <div className={styles.qtyControls}>
-                                        {qty > 0 ? (
-                                            <>
+
+                                        {/* Action Button - Top Right */}
+                                        <div className={styles.actionOverlay}>
+                                            {qty > 0 ? (
+                                                <div className={styles.qtyControls}>
+                                                    <button
+                                                        className={styles.miniBtn}
+                                                        onClick={() => updateQuantity(product.id, qty + 1)}
+                                                        disabled={qty >= product.stock}
+                                                    >
+                                                        <IoAdd size={14} />
+                                                    </button>
+                                                    <span className={styles.qtyCount}>{qty}</span>
+                                                    <button
+                                                        className={styles.miniBtn}
+                                                        onClick={() => qty === 1 ? removeItem(product.id) : updateQuantity(product.id, qty - 1)}
+                                                    >
+                                                        <IoRemove size={14} />
+                                                    </button>
+                                                </div>
+                                            ) : (
                                                 <button
-                                                    className={styles.qtyBtn}
-                                                    onClick={() => qty === 1 ? removeItem(product.id) : updateQuantity(product.id, qty - 1)}
+                                                    className={styles.floatingAddBtn}
+                                                    onClick={() => addItem(product)}
+                                                    disabled={product.stock === 0}
                                                 >
-                                                    <IoRemove size={16} />
+                                                    <IoAdd size={22} />
                                                 </button>
-                                                <span className={styles.qtyValue}>{qty}</span>
-                                                <button
-                                                    className={`${styles.qtyBtn} ${styles.qtyBtnAdd}`}
-                                                    onClick={() => updateQuantity(product.id, qty + 1)}
-                                                    disabled={qty >= product.stock}
-                                                >
-                                                    <IoAdd size={16} />
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <button
-                                                className={styles.addBtn}
-                                                onClick={() => addItem(product)}
-                                                disabled={product.stock === 0}
-                                            >
-                                                <IoAdd size={18} />
-                                                <span>Add</span>
-                                            </button>
-                                        )}
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className={styles.productDetails}>
+                                        <p className={styles.vProductName}>{product.title}</p>
+                                        <p className={styles.vProductPrice}>{formatCurrency(product.price)}</p>
                                     </div>
                                 </div>
                             );

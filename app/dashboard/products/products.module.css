@@ -68,30 +68,29 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 32px;
 }
 
+/* Product Card Vertical */
 .productCard {
-    background: var(--card);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow);
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s;
 }
 
-.productCard:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.imageWrap {
+.imageContainer {
     width: 100%;
-    height: 180px;
-    background: var(--bg);
+    aspect-ratio: 1;
+    background: #E5E7EB;
+    border-radius: 24px;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
 .productImage {
@@ -106,19 +105,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--border-light);
 }
 
 .stockBadge {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 12px;
+    left: 12px;
     background: rgba(255, 255, 255, 0.95);
-    padding: 4px 10px;
-    border-radius: 10px;
+    padding: 6px 12px;
+    border-radius: 12px;
     font-size: 11px;
     font-weight: 800;
-    color: var(--text-secondary);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
 }
 
 .stockLow {
@@ -128,46 +127,47 @@
 
 .deleteFloat {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 28px;
-    height: 28px;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: var(--danger);
+    background: rgba(239, 68, 68, 0.9);
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow);
-    transition: opacity 0.2s;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
 }
 
 .deleteFloat:hover {
     opacity: 0.85;
 }
 
-.productInfo {
-    display: block;
-    padding: 14px 16px;
+.productDetails {
+    background: transparent;
+    border: none;
+    padding: 0 4px;
     text-align: left;
-    width: 100%;
     cursor: pointer;
-    transition: background 0.2s;
 }
 
-.productInfo:hover {
+.productDetails:hover {
     background: var(--bg);
 }
 
-.productName {
+.vProductName {
     font-size: 16px;
     font-weight: 700;
-    color: var(--text);
+    color: #000;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.productPrice {
+.vProductPrice {
     font-size: 14px;
     font-weight: 600;
     color: var(--text-tertiary);

@@ -2,6 +2,7 @@
 
 import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { AuthContext, AuthProvider } from '@/context/AuthContext';
 import GradientButton from '@/components/GradientButton';
 import styles from './login.module.css';
@@ -39,12 +40,15 @@ function LoginForm() {
                 <div className={styles.header}>
                     <div className={styles.headerDecoration} />
                     <div className={styles.logoCircle}>
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
+                        <Image
+                            src="/MarkLogo-black.png"
+                            alt="Logo"
+                            width={42}
+                            height={42}
+                            priority
+                        />
                     </div>
-                    <h1 className={styles.brand}>RoomCollection</h1>
+                    <h1 className={styles.brand}>ROOM COLLECTION</h1>
                     <p className={styles.subtitle}>Point of Sale System</p>
                 </div>
 

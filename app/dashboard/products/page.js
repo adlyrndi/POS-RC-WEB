@@ -9,6 +9,16 @@ import GradientButton from '@/components/GradientButton';
 import styles from './products.module.css';
 
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const BACKEND_URL = 'https://pos-rc-backend-production.up.railway.app';
+
+const getImageUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http')) {
+        return url.replace(/http:\/\/localhost:(8080|3000)/, BACKEND_URL)
+            .replace('http://pos-rc-backend-production.up.railway.app', BACKEND_URL);
+    }
+    return `${BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 export default function ProductManagementPage() {
     const { tenantId } = useContext(AuthContext);
@@ -140,22 +150,22 @@ export default function ProductManagementPage() {
                     <div className={styles.grid}>
                         {products.map((product) => (
                             <div key={product.id} className={styles.productCard}>
-                                <div className={styles.imageWrap}>
+                                <div className={styles.imageContainer}>
                                     {product.image_url ? (
-                                        <img src={product.image_url} alt={product.title} className={styles.productImage} />
+                                        <img src={getImageUrl(product.image_url)} alt={product.title} className={styles.productImage} />
                                     ) : (
-                                        <div className={styles.imagePlaceholder}><IoCube size={32} color="#94A3B8" /></div>
+                                        <div className={styles.imagePlaceholder}><IoCube size={32} color="#CBD5E1" /></div>
                                     )}
-                                    <span className={`${styles.stockBadge} ${product.stock <= 5 && product.stock > 0 ? styles.stockLow : ''}`}>
-                                        Stock: {product.stock}
+                                    <span className={styles.stockBadge}>
+                                        Stock : {product.stock}
                                     </span>
                                     <button className={styles.deleteFloat} onClick={() => handleDelete(product)}>
                                         <IoClose size={18} color="#FFF" />
                                     </button>
                                 </div>
-                                <button className={styles.productInfo} onClick={() => openEdit(product)}>
-                                    <p className={styles.productName}>{product.title}</p>
-                                    <p className={styles.productPrice}>{formatCurrency(product.price)}</p>
+                                <button className={styles.productDetails} onClick={() => openEdit(product)}>
+                                    <p className={styles.vProductName}>{product.title}</p>
+                                    <p className={styles.vProductPrice}>{formatCurrency(product.price)}</p>
                                 </button>
                             </div>
                         ))}

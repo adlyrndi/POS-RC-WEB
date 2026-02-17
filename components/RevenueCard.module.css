@@ -198,7 +198,8 @@
 /* ─── Small Mobile (< 360px) ─── */
 @media (max-width: 360px) {
     .amount {
-        font-size: 28px;
+        font-size: 24px;
+        word-break: break-all;
     }
 
     .statsRow {
