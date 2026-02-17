@@ -1,9 +1,18 @@
 import axios from 'axios';
 
+const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app/api';
 
-// Always use Railway backend — Next.js dev server also runs on :3000
-const BASE_URL = RAILWAY_URL;
+// Dynamically determine the backend URL in development
+const getBaseUrl = () => {
+    if (!IS_DEV) return RAILWAY_URL;
+    if (typeof window === 'undefined') return 'http://localhost:3000/api';
+
+    // Use the same hostname as the web app (e.g., 192.168.x.x) if accessed from mobile
+    return `http://${window.location.hostname}:3000/api`;
+};
+
+const BASE_URL = getBaseUrl();
 
 const api = axios.create({
     baseURL: BASE_URL,
