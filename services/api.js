@@ -3,16 +3,12 @@ import axios from 'axios';
 const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app/api';
 
-// Dynamically determine the backend URL in development
-const getBaseUrl = () => {
-    if (!IS_DEV) return RAILWAY_URL;
-    if (typeof window === 'undefined') return 'http://localhost:3000/api';
+// Use NEXT_PUBLIC_API_URL from .env.local in dev, otherwise fallback to Railway
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || RAILWAY_URL;
 
-    // Use the same hostname as the web app (e.g., 192.168.x.x) if accessed from mobile
-    return `http://${window.location.hostname}:3000/api`;
-};
-
-const BASE_URL = getBaseUrl();
+console.log('--- WEB-APP API CONFIG ---');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Target API:', BASE_URL);
 
 const api = axios.create({
     baseURL: BASE_URL,
