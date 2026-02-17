@@ -12,7 +12,7 @@ const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
 const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app';
 const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
-    ? `http://${window.location.hostname}:5000`
+    ? `http://${window.location.hostname}:3000`
     : RAILWAY_URL;
 
 const getImageUrl = (url) => {
