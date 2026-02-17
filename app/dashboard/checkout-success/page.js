@@ -15,6 +15,10 @@ function SuccessContent() {
     const subtotal = Number(params.get('subtotal')) || 0;
     const discount = Number(params.get('discount')) || 0;
     const total = Number(params.get('total')) || 0;
+    const male = params.get('male') || '0';
+    const female = params.get('female') || '0';
+    const itemsCount = params.get('items') || '0';
+    const summary = params.get('summary') || '';
 
     return (
         <div className={styles.container}>
@@ -36,6 +40,25 @@ function SuccessContent() {
                     </div>
                     <div className={styles.divider} />
                     <div className={styles.row}>
+                        <span className={styles.label}>Total Items</span>
+                        <span className={styles.value}>{itemsCount} Items</span>
+                    </div>
+                    <div className={styles.row}>
+                        <span className={styles.label}>Payment</span>
+                        <span className={styles.value}>{method}</span>
+                    </div>
+                    <div className={styles.row}>
+                        <span className={styles.label}>Demographics</span>
+                        <span className={styles.value}>{male} Male, {female} Female</span>
+                    </div>
+                    {summary && (
+                        <div className={styles.row} style={{ marginTop: 8 }}>
+                            <span className={styles.label} style={{ fontSize: '12px', opacity: 0.8 }}>Summary</span>
+                            <span className={styles.value} style={{ fontSize: '13px', textAlign: 'right', fontWeight: 600 }}>{summary}</span>
+                        </div>
+                    )}
+                    <div className={styles.divider} />
+                    <div className={styles.row}>
                         <span className={styles.label}>Subtotal</span>
                         <span className={styles.value}>{formatCurrency(subtotal)}</span>
                     </div>
@@ -47,7 +70,7 @@ function SuccessContent() {
                     )}
                     <div className={styles.divider} />
                     <div className={`${styles.row} ${styles.totalRow}`}>
-                        <span>Total</span>
+                        <span>TOTAL</span>
                         <span>{formatCurrency(total)}</span>
                     </div>
                 </div>

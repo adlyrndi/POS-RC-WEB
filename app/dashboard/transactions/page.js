@@ -98,12 +98,19 @@ export default function TransactionHistoryPage() {
                                                 <span className={styles.detailLabel}>Payment</span>
                                                 <span className={styles.detailValue}>{tx.payment_method}</span>
                                             </div>
-                                            {(tx.male_count > 0 || tx.female_count > 0) && (
-                                                <div className={styles.detailRow}>
-                                                    <span className={styles.detailLabel}>Demographics</span>
-                                                    <span className={styles.detailValue}>{tx.male_count} Male, {tx.female_count} Female</span>
-                                                </div>
-                                            )}
+                                            <div className={styles.detailRow}>
+                                                <span className={styles.detailLabel}>Demographics</span>
+                                                <span className={styles.detailValue}>
+                                                    {tx.male_count || 0} Male, {tx.female_count || 0} Female
+                                                </span>
+                                            </div>
+
+                                            <div className={styles.detailRow}>
+                                                <span className={styles.detailLabel}>Summary</span>
+                                                <span className={styles.detailValue} style={{ fontWeight: 600 }}>
+                                                    {(tx.transaction_items || []).map(i => `${i.quantity} ${i.product_title}`).join(', ')}
+                                                </span>
+                                            </div>
 
                                             <div className={styles.divider} />
 

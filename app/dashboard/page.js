@@ -72,14 +72,16 @@ export default function DashboardHome() {
 
     const topItems = Object.entries(itemTotals)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 2); // Get top 2 best sellers
+        .slice(0, 2);
 
-    // Mock Gender Demographics (Today)
-    const totalSoldToday = productsSoldToday || 1;
-    const maleCount = Math.ceil(totalSoldToday * 0.55);
-    const femaleCount = totalSoldToday - maleCount;
-    const malePercent = Math.round((maleCount / totalSoldToday) * 100);
-    const femalePercent = 100 - malePercent;
+    // Real Gender Demographics (Today)
+    const maleCount = todayTx.reduce((acc, tx) => acc + (tx.male_count || 0), 0);
+    const femaleCount = todayTx.reduce((acc, tx) => acc + (tx.female_count || 0), 0);
+    const totalGenderCount = maleCount + femaleCount;
+    const hasGenderData = totalGenderCount > 0;
+
+    const malePercent = hasGenderData ? Math.round((maleCount / totalGenderCount) * 100) : 0;
+    const femalePercent = hasGenderData ? 100 - malePercent : 0;
 
     return (
         <div className={styles.container}>
@@ -117,20 +119,26 @@ export default function DashboardHome() {
                             <span className={styles.demoTitle}>Buyer Gender (Today)</span>
                         </div>
                         <div className={styles.demoBody}>
-                            <div className={styles.demoStatRow}>
-                                <span className={styles.demoLabel}>Male ({maleCount})</span>
-                                <span className={styles.demoPercent} style={{ color: '#6366F1' }}>{malePercent}%</span>
-                            </div>
-                            <div className={styles.progressBarWrap}>
-                                <div className={styles.progressBar} style={{ width: `${malePercent}%`, background: 'linear-gradient(90deg, #6366F1, #818CF8)' }} />
-                            </div>
-                            <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
-                                <span className={styles.demoLabel}>Female ({femaleCount})</span>
-                                <span className={styles.demoPercent} style={{ color: '#22D3EE' }}>{femalePercent}%</span>
-                            </div>
-                            <div className={styles.progressBarWrap}>
-                                <div className={styles.progressBar} style={{ width: `${femalePercent}%`, background: 'linear-gradient(90deg, #22D3EE, #67E8F9)' }} />
-                            </div>
+                            {!hasGenderData ? (
+                                <p className={styles.emptyText}>No gender data today</p>
+                            ) : (
+                                <>
+                                    <div className={styles.demoStatRow}>
+                                        <span className={styles.demoLabel}>Male ({maleCount})</span>
+                                        <span className={styles.demoPercent} style={{ color: '#6366F1' }}>{malePercent}%</span>
+                                    </div>
+                                    <div className={styles.progressBarWrap}>
+                                        <div className={styles.progressBar} style={{ width: `${malePercent}%`, background: 'linear-gradient(90deg, #6366F1, #818CF8)' }} />
+                                    </div>
+                                    <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
+                                        <span className={styles.demoLabel}>Female ({femaleCount})</span>
+                                        <span className={styles.demoPercent} style={{ color: '#22D3EE' }}>{femalePercent}%</span>
+                                    </div>
+                                    <div className={styles.progressBarWrap}>
+                                        <div className={styles.progressBar} style={{ width: `${femalePercent}%`, background: 'linear-gradient(90deg, #22D3EE, #67E8F9)' }} />
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -146,7 +154,7 @@ export default function DashboardHome() {
                                 <p className={styles.emptyText}>No sales yet</p>
                             ) : (
                                 topItems.map(([name, sold], idx) => {
-                                    const percent = Math.round((sold / totalSoldToday) * 100);
+                                    const percent = Math.round((sold / productsSoldToday) * 100);
                                     return (
                                         <div key={name} style={{ marginTop: idx === 0 ? 0 : 12 }}>
                                             <div className={styles.demoStatRow}>
@@ -202,7 +210,7 @@ export default function DashboardHome() {
                     {recentTx.length === 0 ? (
                         <p className={styles.emptyText}>No transactions yet</p>
                     ) : (
-                        recentTx.slice(0, 10).map((tx) => (
+                        recentTx.slice(0, 5).map((tx) => (
                             <Link
                                 href={`/dashboard/transactions?id=${tx.id}`}
                                 key={tx.id}
