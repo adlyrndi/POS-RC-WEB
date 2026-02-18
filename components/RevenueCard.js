@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IoEyeOutline, IoEyeOffOutline, IoTrendingUp, IoTrendingDown } from 'react-icons/io5';
 import styles from './RevenueCard.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 
 export default function RevenueCard({
     title = "Total Revenue",

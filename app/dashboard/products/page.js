@@ -8,7 +8,7 @@ import Modal from '@/components/Modal';
 import GradientButton from '@/components/GradientButton';
 import styles from './products.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app';
 const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
@@ -17,11 +17,17 @@ const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
 
 const getImageUrl = (url) => {
     if (!url) return '';
+    // If it's a full HTTPS URL (like Supabase storage), use it directly
+    if (url.startsWith('https://')) return url;
+
     if (url.startsWith('http')) {
+        // Fix for legacy absolute URLs pointing to localhost or production
         return url.replace(/http:\/\/localhost:(8080|3000)/, BACKEND_URL)
-            .replace('http://pos-rc-backend-production.up.railway.app', BACKEND_URL);
+            .replace('https://pos-rc-backend-production.up.railway.app', BACKEND_URL);
     }
-    return `${BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    // Handle relative paths (e.g., /uploads/...)
+    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+    return `${BACKEND_URL.replace(/\/api$/, '')}${cleanUrl}`;
 };
 
 export default function ProductManagementPage() {

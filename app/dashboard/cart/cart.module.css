@@ -451,13 +451,47 @@
 
 /* ─── Mobile ─── */
 @media (max-width: 768px) {
-    .header {
-        padding: 24px 20px;
+    .content {
+        padding: 16px;
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
 
-    .content {
-        padding: 20px 16px;
-        grid-template-columns: 1fr;
+    .itemCard {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .itemImageWrap {
+        width: 44px;
+        height: 44px;
+    }
+
+    .itemName {
+        font-size: 13px;
+    }
+
+    .itemPrice {
+        font-size: 12px;
+    }
+
+    .qtyBtn {
+        width: 24px;
+        height: 24px;
+    }
+
+    .qtyValue {
+        font-size: 13px;
+        min-width: 20px;
+    }
+
+    .summaryCard {
+        padding: 16px;
+    }
+
+    .summaryTitle {
+        font-size: 16px;
+        margin-bottom: 12px;
     }
 
     .countRow {

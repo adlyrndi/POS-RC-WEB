@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import styles from './success.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 
 function SuccessContent() {
     const params = useSearchParams();
@@ -52,12 +52,10 @@ function SuccessContent() {
                         <span className={styles.label}>Demographics</span>
                         <span className={styles.value}>{male} Male, {female} Female</span>
                     </div>
-                    {summary && (
-                        <div className={styles.row} style={{ marginTop: 8 }}>
-                            <span className={styles.label} style={{ fontSize: '12px', opacity: 0.8 }}>Summary</span>
-                            <span className={styles.value} style={{ fontSize: '13px', textAlign: 'right', fontWeight: 600 }}>{summary}</span>
-                        </div>
-                    )}
+                    <div className={styles.row}>
+                        <span className={styles.label}>Summary</span>
+                        <span className={styles.value} style={{ fontSize: '13px', textAlign: 'right', fontWeight: 600, maxWidth: '60%' }}>{summary}</span>
+                    </div>
                     <div className={styles.divider} />
                     <div className={styles.row}>
                         <span className={styles.label}>Subtotal</span>

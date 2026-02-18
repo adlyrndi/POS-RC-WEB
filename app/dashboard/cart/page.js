@@ -9,7 +9,7 @@ import { IoRemove, IoAdd, IoCloseCircle, IoManOutline, IoWomanOutline } from 're
 import GradientButton from '@/components/GradientButton';
 import styles from './cart.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 const PAYMENT_METHODS = ['Cash', 'Debit Card', 'Credit Card', 'E-Wallet'];
 
 export default function CartPage() {
@@ -216,8 +216,22 @@ export default function CartPage() {
                     <div className={styles.summaryCard}>
                         <h3 className={styles.summaryTitle}>Order Summary</h3>
                         <div className={styles.summaryRow}>
-                            <span>Subtotal</span>
+                            <span>Subtotal ({itemCount} items)</span>
                             <span>{formatCurrency(subtotal)}</span>
+                        </div>
+                        <div className={styles.summaryRow}>
+                            <span>Products</span>
+                            <span style={{ fontSize: '12px', textAlign: 'right', fontWeight: 500, maxWidth: '60%' }}>
+                                {items.map(i => i.title).join(', ')}
+                            </span>
+                        </div>
+                        <div className={styles.summaryRow}>
+                            <span>Demographics</span>
+                            <span>{maleCount}M, {femaleCount}F</span>
+                        </div>
+                        <div className={styles.summaryRow}>
+                            <span>Payment</span>
+                            <span>{paymentMethod}</span>
                         </div>
                         {discount > 0 && (
                             <div className={`${styles.summaryRow} ${styles.discountRow}`}>

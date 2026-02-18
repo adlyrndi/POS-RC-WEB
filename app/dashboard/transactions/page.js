@@ -7,7 +7,7 @@ import { transactionService } from '@/services/api';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import styles from './transactions.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 const formatDate = (d) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const formatTime = (d) => new Date(d).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 

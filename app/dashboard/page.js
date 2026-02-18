@@ -8,7 +8,7 @@ import { IoBarChart, IoCube, IoReceipt, IoPeople, IoShapes } from 'react-icons/i
 import RevenueCard from '@/components/RevenueCard';
 import styles from './home.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 
 export default function DashboardHome() {
     const { tenantId, tenantName, user } = useContext(AuthContext);

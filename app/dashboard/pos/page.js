@@ -8,7 +8,7 @@ import { productService } from '@/services/api';
 import { IoSearchOutline, IoAdd, IoRemove, IoCartOutline, IoCube } from 'react-icons/io5';
 import styles from './pos.module.css';
 
-const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID')}`;
+const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app';
 const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
@@ -17,13 +17,15 @@ const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
 
 const getImageUrl = (url) => {
     if (!url) return '';
-    // If it's already a full URL, ensure it uses HTTPS and the production domain if it's pointing to localhost
+    // If it's a full HTTPS URL (like Supabase storage), use it directly
+    if (url.startsWith('https://')) return url;
+
     if (url.startsWith('http')) {
         return url.replace(/http:\/\/localhost:(8080|3000)/, BACKEND_URL)
-            .replace('http://pos-rc-backend-production.up.railway.app', BACKEND_URL);
+            .replace('https://pos-rc-backend-production.up.railway.app', BACKEND_URL);
     }
-    // For relative paths, prepend the backend production URL
-    return `${BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+    return `${BACKEND_URL.replace(/\/api$/, '')}${cleanUrl}`;
 };
 
 export default function POSPage() {
@@ -111,17 +113,17 @@ export default function POSPage() {
                                                 <div className={styles.qtyControls}>
                                                     <button
                                                         className={styles.miniBtn}
-                                                        onClick={() => updateQuantity(product.id, qty + 1)}
-                                                        disabled={qty >= product.stock}
+                                                        onClick={() => qty === 1 ? removeItem(product.id) : updateQuantity(product.id, qty - 1)}
                                                     >
-                                                        <IoAdd size={14} />
+                                                        <IoRemove size={14} />
                                                     </button>
                                                     <span className={styles.qtyCount}>{qty}</span>
                                                     <button
                                                         className={styles.miniBtn}
-                                                        onClick={() => qty === 1 ? removeItem(product.id) : updateQuantity(product.id, qty - 1)}
+                                                        onClick={() => updateQuantity(product.id, qty + 1)}
+                                                        disabled={qty >= product.stock}
                                                     >
-                                                        <IoRemove size={14} />
+                                                        <IoAdd size={14} />
                                                     </button>
                                                 </div>
                                             ) : (
