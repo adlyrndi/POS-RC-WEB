@@ -14,8 +14,10 @@ function SuccessContent() {
     const code = params.get('code') || 'N/A';
     const method = params.get('method') || 'Cash';
     const subtotal = Number(params.get('subtotal')) || 0;
-    const discount = Number(params.get('discount')) || 0;
     const total = Number(params.get('total')) || 0;
+    const regDiscount = Number(params.get('reg_discount')) || 0;
+    const eventDiscount = Number(params.get('event_discount')) || 0;
+    const discount = Number(params.get('discount')) || 0;
     const male = params.get('male') || '0';
     const female = params.get('female') || '0';
     const itemsCount = params.get('items') || '0';
@@ -61,7 +63,19 @@ function SuccessContent() {
                         <span className={styles.label}>Subtotal</span>
                         <span className={styles.value}>{formatCurrency(subtotal)}</span>
                     </div>
-                    {discount > 0 && (
+                    {regDiscount > 0 && (
+                        <div className={styles.row}>
+                            <span className={styles.label}>Regular Discount</span>
+                            <span className={styles.discountValue}>-{formatCurrency(regDiscount)}</span>
+                        </div>
+                    )}
+                    {eventDiscount > 0 && (
+                        <div className={styles.row}>
+                            <span className={styles.label}>Event Discount</span>
+                            <span className={styles.discountValue}>-{formatCurrency(eventDiscount)}</span>
+                        </div>
+                    )}
+                    {discount > 0 && !regDiscount && !eventDiscount && (
                         <div className={styles.row}>
                             <span className={styles.label}>Discount</span>
                             <span className={styles.discountValue}>-{formatCurrency(discount)}</span>

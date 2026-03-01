@@ -7,6 +7,7 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
     const [items, setItems] = useState([]);
     const [voucher, setVoucher] = useState(null);
+    const [eventVoucher, setEventVoucher] = useState(null);
     const [maleCount, setMaleCount] = useState(0);
     const [femaleCount, setFemaleCount] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('Cash');
@@ -55,17 +56,26 @@ export const CartProvider = ({ children }) => {
     const clearCart = useCallback(() => {
         setItems([]);
         setVoucher(null);
+        setEventVoucher(null);
         setMaleCount(0);
         setFemaleCount(0);
         setPaymentMethod('Cash');
     }, []);
 
     const applyVoucher = useCallback((v) => {
-        setVoucher(v);
+        if (v.category === 'event') {
+            setEventVoucher(v);
+        } else {
+            setVoucher(v);
+        }
     }, []);
 
-    const removeVoucher = useCallback(() => {
-        setVoucher(null);
+    const removeVoucher = useCallback((category = 'regular') => {
+        if (category === 'event') {
+            setEventVoucher(null);
+        } else {
+            setVoucher(null);
+        }
     }, []);
 
     const subtotal = useMemo(
@@ -73,13 +83,24 @@ export const CartProvider = ({ children }) => {
         [items]
     );
 
-    const discount = useMemo(() => {
+    const regularDiscount = useMemo(() => {
         if (!voucher) return 0;
         if (voucher.discount_type === 'percentage') {
             return Math.round((subtotal * voucher.discount_amount) / 100);
         }
         return voucher.discount_amount;
     }, [voucher, subtotal]);
+
+    const eventDiscount = useMemo(() => {
+        if (!eventVoucher) return 0;
+        const subtotalAfterRegular = Math.max(0, subtotal - regularDiscount);
+        if (eventVoucher.discount_type === 'percentage') {
+            return Math.round((subtotalAfterRegular * eventVoucher.discount_amount) / 100);
+        }
+        return eventVoucher.discount_amount;
+    }, [eventVoucher, subtotal, regularDiscount]);
+
+    const discount = useMemo(() => regularDiscount + eventDiscount, [regularDiscount, eventDiscount]);
 
     const total = useMemo(() => Math.max(0, subtotal - discount), [subtotal, discount]);
 
@@ -105,10 +126,13 @@ export const CartProvider = ({ children }) => {
                 setFemaleCount,
                 paymentMethod,
                 setPaymentMethod,
+                itemCount,
                 subtotal,
+                eventVoucher,
+                regularDiscount,
+                eventDiscount,
                 discount,
                 total,
-                itemCount,
             }}
         >
             {children}

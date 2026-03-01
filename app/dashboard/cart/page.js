@@ -16,10 +16,10 @@ export default function CartPage() {
     const { tenantId } = useContext(AuthContext);
     const {
         items, removeItem, updateQuantity, clearCart,
-        voucher, applyVoucher, removeVoucher,
+        voucher, eventVoucher, applyVoucher, removeVoucher,
         maleCount, setMaleCount, femaleCount, setFemaleCount,
         paymentMethod, setPaymentMethod,
-        subtotal, discount, total, itemCount,
+        subtotal, regularDiscount, eventDiscount, discount, total, itemCount,
     } = useContext(CartContext);
     const router = useRouter();
     const [vouchers, setVouchers] = useState([]);
@@ -56,12 +56,13 @@ export default function CartPage() {
                 male_count: maleCount,
                 female_count: femaleCount,
                 voucher_id: voucher?.id || null,
+                event_voucher_id: eventVoucher?.id || null,
             };
             const res = await transactionService.createTransaction(txData);
             const transaction = res.data;
             const summary = items.map(i => `${i.quantity} ${i.title}`).join(', ');
             clearCart();
-            router.push(`/dashboard/checkout-success?code=${transaction.transaction_code}&method=${paymentMethod}&subtotal=${subtotal}&discount=${discount}&total=${total}&male=${maleCount}&female=${femaleCount}&items=${itemCount}&summary=${encodeURIComponent(summary)}`);
+            router.push(`/dashboard/checkout-success?code=${transaction.transaction_code}&method=${paymentMethod}&subtotal=${subtotal}&discount=${discount}&reg_discount=${regularDiscount}&event_discount=${eventDiscount}&total=${total}&male=${maleCount}&female=${femaleCount}&items=${itemCount}&summary=${encodeURIComponent(summary)}`);
         } catch (err) {
             alert(err.response?.data?.error || 'Checkout failed');
         } finally {
@@ -130,39 +131,80 @@ export default function CartPage() {
                         </div>
                     </div>
 
-                    {/* Voucher */}
                     <div className={styles.section}>
-                        <h3 className={styles.sectionTitle}>Voucher</h3>
-                        {voucher ? (
-                            <div className={styles.voucherApplied}>
-                                <div>
-                                    <p className={styles.voucherCode}>{voucher.code}</p>
-                                    <p className={styles.voucherDiscount}>
-                                        {voucher.discount_type === 'percentage' ? `${voucher.discount_amount}%` : formatCurrency(voucher.discount_amount)} off
-                                    </p>
+                        <h3 className={styles.sectionTitle}>Vouchers</h3>
+
+                        <div className={styles.voucherSelectionGrid}>
+                            {/* Regular Voucher Selection */}
+                            <div className={styles.voucherBox}>
+                                <div className={styles.voucherBoxHeader}>
+                                    <span className={styles.voucherTypeTag}>REGULAR</span>
+                                    {voucher && <button className={styles.clearVoucherBtn} onClick={() => removeVoucher('regular')}>Remove</button>}
                                 </div>
-                                <button className={styles.removeVoucherBtn} onClick={removeVoucher}>Remove</button>
+                                {voucher ? (
+                                    <div className={styles.voucherAppliedBox}>
+                                        <p className={styles.appliedCode}>{voucher.code}</p>
+                                        <p className={styles.appliedDiscount}>
+                                            {voucher.discount_type === 'percentage' ? `${voucher.discount_amount}%` : formatCurrency(voucher.discount_amount)} OFF
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <button
+                                        className={`${styles.pickerBtn} ${showVoucherPicker === 'regular' ? styles.pickerBtnActive : ''}`}
+                                        onClick={() => setShowVoucherPicker(showVoucherPicker === 'regular' ? null : 'regular')}
+                                    >
+                                        Select Regular Voucher
+                                    </button>
+                                )}
                             </div>
-                        ) : (
-                            <div>
-                                <button className={styles.selectVoucherBtn} onClick={() => setShowVoucherPicker(!showVoucherPicker)}>
-                                    Select Voucher
-                                </button>
-                                {showVoucherPicker && (
-                                    <div className={styles.voucherList}>
-                                        {vouchers.length === 0 ? (
-                                            <p className={styles.noVouchers}>No active vouchers</p>
-                                        ) : (
-                                            vouchers.map((v) => (
-                                                <button key={v.id} className={styles.voucherOption} onClick={() => { applyVoucher(v); setShowVoucherPicker(false); }}>
-                                                    <span className={styles.voucherOptionCode}>{v.code}</span>
-                                                    <span className={styles.voucherOptionName}>{v.name}</span>
-                                                    <span className={styles.voucherOptionAmount}>
+
+                            {/* Event Voucher Selection */}
+                            <div className={styles.voucherBox}>
+                                <div className={styles.voucherBoxHeader}>
+                                    <span className={`${styles.voucherTypeTag} ${styles.eventTag}`}>EVENT</span>
+                                    {eventVoucher && <button className={styles.clearVoucherBtn} onClick={() => removeVoucher('event')}>Remove</button>}
+                                </div>
+                                {eventVoucher ? (
+                                    <div className={`${styles.voucherAppliedBox} ${styles.eventApplied}`}>
+                                        <p className={styles.appliedCode}>{eventVoucher.code}</p>
+                                        <p className={styles.appliedDiscount}>
+                                            {eventVoucher.discount_type === 'percentage' ? `${eventVoucher.discount_amount}%` : formatCurrency(eventVoucher.discount_amount)} OFF
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <button
+                                        className={`${styles.pickerBtn} ${showVoucherPicker === 'event' ? styles.pickerBtnActive : ''}`}
+                                        onClick={() => setShowVoucherPicker(showVoucherPicker === 'event' ? null : 'event')}
+                                    >
+                                        Select Event Voucher
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {showVoucherPicker && (
+                            <div className={styles.expandedVoucherList}>
+                                <div className={styles.listHeader}>
+                                    Available {showVoucherPicker === 'event' ? 'Event' : 'Regular'} Vouchers
+                                </div>
+                                {vouchers.filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular')).length === 0 ? (
+                                    <p className={styles.noVouchers}>No active {showVoucherPicker} vouchers found</p>
+                                ) : (
+                                    <div className={styles.optionsScroll}>
+                                        {vouchers
+                                            .filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular'))
+                                            .map((v) => (
+                                                <button key={v.id} className={styles.voucherOptionItem} onClick={() => { applyVoucher(v); setShowVoucherPicker(null); }}>
+                                                    <div className={styles.optionInfo}>
+                                                        <span className={styles.optionCode}>{v.code}</span>
+                                                        <span className={styles.optionName}>{v.name}</span>
+                                                    </div>
+                                                    <span className={styles.optionAmount}>
                                                         {v.discount_type === 'percentage' ? `${v.discount_amount}%` : formatCurrency(v.discount_amount)}
                                                     </span>
                                                 </button>
                                             ))
-                                        )}
+                                        }
                                     </div>
                                 )}
                             </div>
@@ -233,10 +275,16 @@ export default function CartPage() {
                             <span>Payment</span>
                             <span>{paymentMethod}</span>
                         </div>
-                        {discount > 0 && (
+                        {regularDiscount > 0 && (
                             <div className={`${styles.summaryRow} ${styles.discountRow}`}>
-                                <span>Discount</span>
-                                <span>-{formatCurrency(discount)}</span>
+                                <span>Regular Discount</span>
+                                <span>-{formatCurrency(regularDiscount)}</span>
+                            </div>
+                        )}
+                        {eventDiscount > 0 && (
+                            <div className={`${styles.summaryRow} ${styles.discountRow}`}>
+                                <span>Event Discount</span>
+                                <span>-{formatCurrency(eventDiscount)}</span>
                             </div>
                         )}
                         <div className={styles.summaryDivider} />

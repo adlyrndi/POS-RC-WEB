@@ -138,11 +138,16 @@
 }
 
 /* Demographics SVG Gauge */
+.gaugeWrapper {
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
 .svgContainer {
     width: 240px;
     height: 140px;
     position: relative;
-    margin: 0 auto;
 }
 
 .svgGauge {
@@ -199,6 +204,15 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--text-secondary);
+}
+
+.legendText strong {
+    color: var(--text);
+}
+
+.legendText p {
+    color: var(--text-tertiary);
+    font-weight: 500;
 }
 
 /* Podium Chart */

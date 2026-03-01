@@ -22,6 +22,7 @@ export default function VoucherManagementPage() {
     const [name, setName] = useState('');
     const [discountAmount, setDiscountAmount] = useState('');
     const [discountType, setDiscountType] = useState('percentage');
+    const [category, setCategory] = useState('regular');
 
     const fetchVouchers = useCallback(async () => {
         if (!tenantId) return;
@@ -40,6 +41,7 @@ export default function VoucherManagementPage() {
     const openAdd = () => {
         setEditingVoucher(null);
         setCode(''); setName(''); setDiscountAmount(''); setDiscountType('percentage');
+        setCategory('regular');
         setModalOpen(true);
     };
 
@@ -48,6 +50,7 @@ export default function VoucherManagementPage() {
         setCode(v.code); setName(v.name);
         setDiscountAmount(String(v.discount_amount));
         setDiscountType(v.discount_type);
+        setCategory(v.category || 'regular');
         setModalOpen(true);
     };
 
@@ -55,10 +58,11 @@ export default function VoucherManagementPage() {
         if (!code || !name || !discountAmount) { alert('All fields are required'); return; }
         setSaving(true);
         try {
+            const payload = { code, name, discount_amount: Number(discountAmount), discount_type: discountType, category };
             if (editingVoucher) {
-                await voucherService.updateVoucher(editingVoucher.id, { code, name, discount_amount: Number(discountAmount), discount_type: discountType });
+                await voucherService.updateVoucher(editingVoucher.id, payload);
             } else {
-                await voucherService.createVoucher({ code, name, discount_amount: Number(discountAmount), discount_type: discountType, tenant_id: tenantId });
+                await voucherService.createVoucher({ ...payload, tenant_id: tenantId });
             }
             setModalOpen(false);
             fetchVouchers();
@@ -113,7 +117,10 @@ export default function VoucherManagementPage() {
                                 {/* Sawtooth edges via CSS */}
                                 <div className={styles.couponMain}>
                                     <button className={styles.couponContent} onClick={() => openEdit(v)}>
-                                        <span className={styles.couponCodeBadge}>{v.code}</span>
+                                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px' }}>
+                                            <span className={styles.couponCodeBadge}>{v.code}</span>
+                                            {v.category === 'event' && <span className={styles.categoryBadge}>EVENT</span>}
+                                        </div>
                                         <div className={styles.couponNameWrap}>
                                             <div className={styles.couponLine} />
                                             <p className={styles.couponName}>{v.name.toUpperCase()}</p>
@@ -167,6 +174,16 @@ export default function VoucherManagementPage() {
                 <div className={styles.formGroup}>
                     <label className="form-label">Name *</label>
                     <input className="form-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Voucher name" />
+                </div>
+                <div className={styles.formGroup}>
+                    <label className="form-label">Category</label>
+                    <div className={styles.typeRow}>
+                        {['regular', 'event'].map((c) => (
+                            <button key={c} className={`${styles.typeChip} ${category === c ? styles.typeChipActive : ''}`} onClick={() => setCategory(c)}>
+                                {c.charAt(0).toUpperCase() + c.slice(1)}
+                            </button>
+                        ))}
+                    </div>
                 </div>
                 <div className={styles.formGroup}>
                     <label className="form-label">Discount Type</label>

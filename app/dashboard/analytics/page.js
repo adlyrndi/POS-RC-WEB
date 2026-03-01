@@ -24,7 +24,13 @@ export default function AnalyticsPage() {
         salesByHour: Array(24).fill(0),
         itemsByHour: Array(24).fill(0),
         products: [],
-        vouchers: []
+        vouchers: [],
+        vouchersRedeemed: 0,
+        regularCount: 0,
+        eventCount: 0,
+        regularDiscountTotal: 0,
+        eventDiscountTotal: 0,
+        voucherDiscountTotal: 0
     });
     const [loading, setLoading] = useState(true);
 
@@ -84,7 +90,13 @@ export default function AnalyticsPage() {
                 maleTotal,
                 femaleTotal,
                 paymentStats,
-                topSelling
+                topSelling,
+                vouchersRedeemed: allTime.vouchers?.total_redeemed || 0,
+                regularCount: allTime.vouchers?.regular_count || 0,
+                eventCount: allTime.vouchers?.event_count || 0,
+                regularDiscountTotal: allTime.vouchers?.regular_discount || 0,
+                eventDiscountTotal: allTime.vouchers?.event_discount || 0,
+                voucherDiscountTotal: allTime.vouchers?.total_discount || 0
             });
 
         } catch (err) {
@@ -188,6 +200,76 @@ export default function AnalyticsPage() {
                             <span className={styles.legendText}>
                                 Female: <strong>{stats.femaleTotal}</strong> ({Math.round((stats.femaleTotal / (stats.maleTotal + stats.femaleTotal || 1)) * 100)}%)
                             </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Vouchers Stats Card - NEW GAUGE */}
+                <div className={styles.chartCard}>
+                    <h3 className={styles.cardTitle}>Voucher Redemption Breakdown</h3>
+                    <div className={styles.gaugeWrapper}>
+                        <div className={styles.svgContainer}>
+                            <svg viewBox="0 0 200 120" className={styles.svgGauge}>
+                                <defs>
+                                    <linearGradient id="regGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#FDBA74" />
+                                        <stop offset="100%" stopColor="#F97316" />
+                                    </linearGradient>
+                                    <linearGradient id="eventGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#FB923C" />
+                                        <stop offset="100%" stopColor="#EA580C" />
+                                    </linearGradient>
+                                </defs>
+                                <path
+                                    d="M 20 100 A 80 80 0 0 1 180 100"
+                                    fill="none"
+                                    stroke="#F3F4F6"
+                                    strokeWidth="24"
+                                    strokeLinecap="round"
+                                />
+                                {/* Event Segment */}
+                                <path
+                                    d="M 20 100 A 80 80 0 0 1 180 100"
+                                    fill="none"
+                                    stroke="url(#eventGradient)"
+                                    strokeWidth="24"
+                                    strokeLinecap="round"
+                                    strokeDasharray={`${Math.PI * 80}`}
+                                    strokeDashoffset="0"
+                                    style={{ transition: 'stroke-dashoffset 1s ease' }}
+                                />
+                                {/* Regular Segment */}
+                                <path
+                                    d="M 20 100 A 80 80 0 0 1 180 100"
+                                    fill="none"
+                                    stroke="url(#regGradient)"
+                                    strokeWidth="24"
+                                    strokeLinecap="round"
+                                    strokeDasharray={`${(stats.regularCount / (stats.regularCount + stats.eventCount || 1)) * Math.PI * 80} ${Math.PI * 80}`}
+                                    style={{ transition: 'stroke-dasharray 1s ease' }}
+                                />
+                            </svg>
+                            <div className={styles.gaugeCenterInfo}>
+                                <p className={styles.gaugeCenterTotal}>{stats.vouchersRedeemed}</p>
+                                <p className={styles.gaugeCenterLabel}>Total Vouchers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.demoLegend}>
+                        <div className={styles.legendItem}>
+                            <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #FDBA74, #F97316)' }} />
+                            <div className={styles.legendText}>
+                                <strong>Regular ({stats.regularCount})</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{formatCurrency(stats.regularDiscountTotal)}</p>
+                            </div>
+                        </div>
+                        <div className={styles.legendItem}>
+                            <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #FB923C, #EA580C)' }} />
+                            <div className={styles.legendText}>
+                                <strong>Event ({stats.eventCount})</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{formatCurrency(stats.eventDiscountTotal)}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

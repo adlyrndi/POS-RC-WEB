@@ -83,6 +83,12 @@ export default function DashboardHome() {
     const malePercent = hasGenderData ? Math.round((maleCount / totalGenderCount) * 100) : 0;
     const femalePercent = hasGenderData ? 100 - malePercent : 0;
 
+    // Voucher Stats (Today)
+    const regularVoucherCountToday = todayTx.filter(t => t.voucher_id).length;
+    const eventVoucherCountToday = todayTx.filter(t => t.event_voucher_id).length;
+    const regularDiscountToday = todayTx.reduce((acc, tx) => acc + (Number(tx.discount) || 0), 0);
+    const eventDiscountToday = todayTx.reduce((acc, tx) => acc + (Number(tx.event_discount) || 0), 0);
+
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -139,6 +145,36 @@ export default function DashboardHome() {
                                     </div>
                                 </>
                             )}
+                        </div>
+                    </div>
+
+                    <div className={styles.demoCard}>
+                        <div className={styles.demoHeader}>
+                            <div className={styles.demoIcon} style={{ background: '#FFF7ED', color: '#F97316' }}>
+                                <IoShapes size={20} />
+                            </div>
+                            <span className={styles.demoTitle}>Vouchers Redeemed (Today)</span>
+                        </div>
+                        <div className={styles.demoBody}>
+                            <div className={styles.demoStatRow}>
+                                <span className={styles.demoLabel}>Regular ({regularVoucherCountToday})</span>
+                                <span className={styles.demoPercent} style={{ color: '#F97316' }}>{formatCurrency(regularDiscountToday)}</span>
+                            </div>
+                            <div className={styles.progressBarWrap} style={{ marginBottom: 12 }}>
+                                <div className={styles.progressBar} style={{ width: `${(regularVoucherCountToday / (regularVoucherCountToday + eventVoucherCountToday || 1)) * 100}%`, background: '#F97316' }} />
+                            </div>
+
+                            <div className={styles.demoStatRow}>
+                                <span className={styles.demoLabel}>Event ({eventVoucherCountToday})</span>
+                                <span className={styles.demoPercent} style={{ color: '#FB923C' }}>{formatCurrency(eventDiscountToday)}</span>
+                            </div>
+                            <div className={styles.progressBarWrap}>
+                                <div className={styles.progressBar} style={{ width: `${(eventVoucherCountToday / (regularVoucherCountToday + eventVoucherCountToday || 1)) * 100}%`, background: '#FB923C' }} />
+                            </div>
+
+                            <div className={styles.demoSubtext} style={{ marginTop: 8, fontWeight: 700, color: 'var(--text)' }}>
+                                Total: {regularVoucherCountToday + eventVoucherCountToday} Vouchers
+                            </div>
                         </div>
                     </div>
 
