@@ -191,15 +191,17 @@ export default function AnalyticsPage() {
                     <div className={styles.demoLegend}>
                         <div className={styles.legendItem}>
                             <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #818CF8, #3B82F6)' }} />
-                            <span className={styles.legendText}>
-                                Male: <strong>{stats.maleTotal}</strong> ({Math.round((stats.maleTotal / (stats.maleTotal + stats.femaleTotal || 1)) * 100)}%)
-                            </span>
+                            <div className={styles.legendText}>
+                                <strong>Male</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{stats.maleTotal} pax • {Math.round((stats.maleTotal / (stats.maleTotal + stats.femaleTotal || 1)) * 100)}%</p>
+                            </div>
                         </div>
                         <div className={styles.legendItem}>
                             <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #F472B6, #EC4899)' }} />
-                            <span className={styles.legendText}>
-                                Female: <strong>{stats.femaleTotal}</strong> ({Math.round((stats.femaleTotal / (stats.maleTotal + stats.femaleTotal || 1)) * 100)}%)
-                            </span>
+                            <div className={styles.legendText}>
+                                <strong>Female</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{stats.femaleTotal} pax • {Math.round((stats.femaleTotal / (stats.maleTotal + stats.femaleTotal || 1)) * 100)}%</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -260,15 +262,15 @@ export default function AnalyticsPage() {
                         <div className={styles.legendItem}>
                             <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #FDBA74, #F97316)' }} />
                             <div className={styles.legendText}>
-                                <strong>Regular ({stats.regularCount})</strong>
-                                <p style={{ fontSize: '11px', margin: 0 }}>{formatCurrency(stats.regularDiscountTotal)}</p>
+                                <strong>Regular</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{stats.regularCount} used • {formatCurrency(stats.regularDiscountTotal)}</p>
                             </div>
                         </div>
                         <div className={styles.legendItem}>
                             <div className={styles.legendDot} style={{ background: 'linear-gradient(to right, #FB923C, #EA580C)' }} />
                             <div className={styles.legendText}>
-                                <strong>Event ({stats.eventCount})</strong>
-                                <p style={{ fontSize: '11px', margin: 0 }}>{formatCurrency(stats.eventDiscountTotal)}</p>
+                                <strong>Event</strong>
+                                <p style={{ fontSize: '11px', margin: 0 }}>{stats.eventCount} used • {formatCurrency(stats.eventDiscountTotal)}</p>
                             </div>
                         </div>
                     </div>

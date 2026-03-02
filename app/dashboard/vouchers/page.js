@@ -3,12 +3,72 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { voucherService } from '@/services/api';
-import { IoTicketOutline, IoCloseCircle } from 'react-icons/io5';
+import { IoTicketOutline, IoCloseCircle, IoCreateOutline } from 'react-icons/io5';
 import Modal from '@/components/Modal';
 import GradientButton from '@/components/GradientButton';
 import styles from './vouchers.module.css';
 
 const DISCOUNT_TYPES = ['percentage', 'fixed'];
+
+// Subcomponent for Horizontal Ticket Card
+function VoucherCard({ v, onEdit, onToggle, onDelete, variant = 'regular' }) {
+    const isEvent = variant === 'event';
+    const amountStr = v.discount_type === 'percentage'
+        ? `${v.discount_amount}%`
+        : `IDR ${Number(v.discount_amount).toLocaleString('id-ID')}`;
+
+    return (
+        <div className={`${styles.horizontalTicket} ${!v.is_active ? styles.ticketDisabled : ''} ${isEvent ? styles.eventTicket : ''}`}>
+            {/* Stub Section */}
+            <div className={styles.ticketStub}>
+                <span className={styles.stubLabel}>
+                    {isEvent ? 'EVENT REWARD' : 'MEMBER VOUCHER'}
+                </span>
+                <div className={styles.stubDot} />
+            </div>
+
+            {/* Main Section */}
+            <div className={styles.ticketMain}>
+                <div className={styles.ticketDecor} />
+                <div className={styles.ticketHeader}>
+                    <p className={styles.categoryLabel}>{v.category}</p>
+                    <h2 className={styles.voucherTitle}>{v.name}</h2>
+                </div>
+
+                <div className={styles.discountSection}>
+                    <span className={styles.discountVal}>
+                        {amountStr}
+                    </span>
+                </div>
+
+                <div className={styles.codeRow}>
+                    <span className={styles.codeText}>CODE: {v.code}</span>
+                </div>
+
+                {/* Actions Overlay */}
+                <div className={styles.ticketActions}>
+                    <div className={styles.actionsTopRow}>
+                        <label className={styles.ticketToggle}>
+                            <input type="checkbox" checked={v.is_active} onChange={() => onToggle(v)} />
+                            <span className={styles.toggleRound} />
+                        </label>
+                        <button className={styles.deleteIconBtn} onClick={(e) => { e.stopPropagation(); onDelete(v); }} title="Delete">
+                            <IoCloseCircle size={22} />
+                        </button>
+                    </div>
+                    <button className={styles.editIconBtn} onClick={() => onEdit(v)} title="Edit">
+                        <IoCreateOutline size={20} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Scallops */}
+            <div className={styles.scallopLeft} />
+            <div className={styles.scallopRight} />
+        </div>
+    );
+}
+
 
 export default function VoucherManagementPage() {
     const { tenantId } = useContext(AuthContext);
@@ -17,6 +77,7 @@ export default function VoucherManagementPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [saving, setSaving] = useState(false);
     const [editingVoucher, setEditingVoucher] = useState(null);
+    const [activeTab, setActiveTab] = useState('regular');
 
     const [code, setCode] = useState('');
     const [name, setName] = useState('');
@@ -41,7 +102,7 @@ export default function VoucherManagementPage() {
     const openAdd = () => {
         setEditingVoucher(null);
         setCode(''); setName(''); setDiscountAmount(''); setDiscountType('percentage');
-        setCategory('regular');
+        setCategory(activeTab);
         setModalOpen(true);
     };
 
@@ -96,68 +157,59 @@ export default function VoucherManagementPage() {
         return <div className={styles.loader}><div className={styles.spinner} /></div>;
     }
 
+    const filteredVouchers = vouchers.filter(v =>
+        activeTab === 'event' ? v.category === 'event' : v.category !== 'event'
+    );
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerDecor} />
-                <h1 className={styles.headerTitle}>Vouchers</h1>
-                <p className={styles.headerSub}>{vouchers.length} vouchers</p>
+                <div className={styles.headerContent}>
+                    <h1 className={styles.headerTitle}>Vouchers</h1>
+                    <p className={styles.headerSub}>{vouchers.length} vouchers total</p>
+                </div>
             </div>
 
             <div className={styles.content}>
+                {/* Category Tabs */}
+                <div className={styles.tabContainer}>
+                    <button
+                        className={`${styles.tabBtn} ${activeTab === 'regular' ? styles.tabActive : ''}`}
+                        onClick={() => setActiveTab('regular')}
+                    >
+                        Regular Vouchers
+                    </button>
+                    <button
+                        className={`${styles.tabBtn} ${activeTab === 'event' ? styles.tabActive : ''}`}
+                        onClick={() => setActiveTab('event')}
+                    >
+                        Event Vouchers
+                    </button>
+                </div>
+
                 {vouchers.length === 0 ? (
                     <div className={styles.empty}>
                         <span className={styles.emptyIcon}>🎟️</span>
                         <p>No vouchers yet</p>
                     </div>
                 ) : (
-                    <div className={styles.voucherGrid}>
-                        {vouchers.map((v) => (
-                            <div key={v.id} className={`${styles.coupon} ${!v.is_active ? styles.couponDisabled : ''}`}>
-                                {/* Sawtooth edges via CSS */}
-                                <div className={styles.couponMain}>
-                                    <button className={styles.couponContent} onClick={() => openEdit(v)}>
-                                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '4px' }}>
-                                            <span className={styles.couponCodeBadge}>{v.code}</span>
-                                            {v.category === 'event' && <span className={styles.categoryBadge}>EVENT</span>}
-                                        </div>
-                                        <div className={styles.couponNameWrap}>
-                                            <div className={styles.couponLine} />
-                                            <p className={styles.couponName}>{v.name.toUpperCase()}</p>
-                                            <div className={styles.couponLine} />
-                                        </div>
-                                    </button>
-                                    <div className={styles.couponDivider}>
-                                        <div className={styles.notchTop} />
-                                        <div className={styles.dottedLine} />
-                                        <div className={styles.notchBottom} />
-                                    </div>
-                                    <div className={styles.couponStub}>
-                                        <span className={styles.stubValue}>
-                                            {v.discount_type === 'percentage' ? `${v.discount_amount}%` : `${Number(v.discount_amount / 1000)}k`}
-                                        </span>
-                                        <span className={styles.stubLabel}>OFF</span>
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className={styles.couponActions}>
-                                    <label className={styles.toggleLabel}>
-                                        <input type="checkbox" checked={v.is_active} onChange={() => handleToggle(v)} className={styles.toggleInput} />
-                                        <span className={styles.toggleTrack}><span className={styles.toggleThumb} /></span>
-                                    </label>
-                                    <button className={styles.deleteSmall} onClick={() => handleDelete(v)}>
-                                        <IoCloseCircle size={20} color="#EF4444" />
-                                    </button>
-                                </div>
-
-                                {!v.is_active && (
-                                    <div className={styles.inactiveOverlay}>
-                                        <span className={styles.inactiveStamp}>INACTIVE</span>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                    <div className={styles.vouchersWrapper}>
+                        <div className={styles.voucherGrid}>
+                            {filteredVouchers.map((v) => (
+                                <VoucherCard
+                                    key={v.id}
+                                    v={v}
+                                    onEdit={openEdit}
+                                    onToggle={handleToggle}
+                                    onDelete={handleDelete}
+                                    variant={v.category === 'event' ? 'event' : 'regular'}
+                                />
+                            ))}
+                            {filteredVouchers.length === 0 && (
+                                <p className={styles.emptySmall}>No {activeTab} vouchers available</p>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

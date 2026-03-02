@@ -1,5 +1,6 @@
 .container {
     min-height: 100vh;
+    background: #F8FAFC;
     position: relative;
 }
 
@@ -43,251 +44,352 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-.headerTitle {
-    font-size: 24px;
-    font-weight: 800;
-    color: #FFF;
+.headerContent {
     position: relative;
     z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.headerTitle {
+    font-size: 26px;
+    font-weight: 800;
+    color: #FFF;
 }
 
 .headerSub {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     margin-top: 4px;
-    position: relative;
-    z-index: 2;
 }
 
 .content {
-    padding: 24px;
-    max-width: 800px;
+    padding: 24px 24px 40px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding-bottom: 100px;
+    padding-bottom: 120px;
+}
+
+/* Tab Navigation */
+.tabContainer {
+    display: flex;
+    gap: 8px;
+    background: #E2E8F0;
+    padding: 6px;
+    border-radius: 16px;
+    width: fit-content;
+    margin-bottom: 40px;
+}
+
+.tabBtn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: #64748B;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tabActive {
+    background: #FFF;
+    color: #0F172A;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.vouchersWrapper {
+    display: flex;
+    flex-direction: column;
 }
 
 .voucherGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Default to 1 column for mobile */
+    gap: 24px;
 }
 
-/* Coupon Card */
-.coupon {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(30, 64, 175, 0.15);
+/* Tablet and Desktop (from 768px onwards) */
+@media (min-width: 768px) {
+    .voucherGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Clean Horizontal Ticket (White Body, No Patterns) */
+.horizontalTicket {
     position: relative;
-    background: var(--primary);
-}
-
-.couponDisabled {
-    background: #94A3B8;
-    opacity: 0.7;
-}
-
-.couponMain {
     display: flex;
-    height: 120px;
-}
-
-.couponContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    background: none;
-    width: 100%;
-}
-
-.couponContent:hover {
-    opacity: 0.85;
-}
-
-.couponCodeBadge {
-    background: #DBEAFE;
-    color: var(--text);
-    padding: 3px 14px;
+    height: 180px;
+    background: white;
     border-radius: 16px;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    border: 1px solid rgba(30, 64, 175, 0.2);
-    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
 }
 
-.categoryBadge {
-    background: #FFEDD5;
-    color: #9A3412;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: 800;
-    border: 1px solid rgba(154, 52, 18, 0.2);
-    margin-bottom: 4px;
+.horizontalTicket:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-.couponNameWrap {
-    width: 80%;
-    text-align: center;
-}
-
-.couponLine {
-    width: 60%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.4);
-    margin: 0 auto;
-}
-
-.couponName {
-    font-size: 18px;
-    font-weight: 900;
-    color: #FFF;
-    letter-spacing: 0.8px;
-    margin: 6px 0;
-    line-height: 1.3;
-}
-
-/* Divider */
-.couponDivider {
-    width: 1px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notchTop,
-.notchBottom {
+.ticketDecor {
     position: absolute;
-    width: 28px;
-    height: 28px;
+    bottom: -75px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    background: var(--bg);
-    z-index: 5;
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    opacity: 0.15;
+    /* More visible than 0.08, cleaner than 0.8 */
+    pointer-events: none;
+    z-index: 0;
 }
 
-.notchTop {
-    top: -14px;
+.ticketDisabled {
+    filter: grayscale(1);
+    opacity: 0.6;
 }
 
-.notchBottom {
-    bottom: -14px;
-}
-
-.dottedLine {
-    height: 50%;
-    width: 1px;
-    border-left: 1px dashed rgba(255, 255, 255, 0.4);
-}
-
-/* Stub */
-.couponStub {
-    width: 90px;
+/* Stub Section */
+.ticketStub {
+    width: 65px;
+    background: var(--primary);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.03);
-}
-
-.stubValue {
-    font-size: 28px;
-    font-weight: 400;
-    color: #FFF;
+    position: relative;
+    color: white;
 }
 
 .stubLabel {
-    font-size: 10px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 9px;
+    /* Reduced from 10px */
     font-weight: 800;
-    color: #FFF;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
-/* Actions */
-.couponActions {
+.stubDot {
+    position: absolute;
+    right: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 1px;
+    border-right: 2px dotted rgba(255, 255, 255, 0.3);
+}
+
+/* Main Section */
+.ticketMain {
+    flex: 1;
+    padding: 24px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    /* Ensure decor stays inside */
+}
+
+.categoryLabel {
+    font-size: 9px;
+    /* Reduced from 10px */
+    font-weight: 700;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.voucherTitle {
+    font-size: 16px;
+    /* Reduced from 18px */
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: -0.2px;
+}
+
+.discountSection {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.discountVal {
+    font-family: var(--font);
+    font-size: 44px;
+    /* Unified and enlarged slightly */
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.discountFixed {
+    display: none;
+    /* No longer needed as we are unifying sizes */
+}
+
+.discountOff {
+    display: none;
+    /* Removed as requested */
+}
+
+.codeRow {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.08);
 }
 
-/* Toggle */
-.toggleLabel {
-    display: inline-flex;
-    cursor: pointer;
+.useCode {
+    font-size: 10px;
+    /* Reduced from 11px */
+    font-weight: 600;
+    color: #94A3B8;
 }
 
-.toggleInput {
-    display: none;
+.codeText {
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.toggleTrack {
-    width: 42px;
-    height: 24px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.3);
-    position: relative;
-    transition: background 0.2s;
-}
-
-.toggleInput:checked+.toggleTrack {
-    background: #DBEAFE;
-}
-
-.toggleThumb {
+/* Scallops */
+.scallopLeft,
+.scallopRight {
     position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    background: #F8FAFC;
     border-radius: 50%;
-    background: #FFF;
-    transition: transform 0.2s;
-    box-shadow: var(--shadow-sm);
+    transform: translateY(-50%);
+    z-index: 5;
 }
 
-.toggleInput:checked+.toggleTrack .toggleThumb {
-    transform: translateX(18px);
-    background: var(--primary);
+.scallopLeft {
+    left: -16px;
 }
 
-.deleteSmall {
-    padding: 2px;
-    transition: opacity 0.2s;
+.scallopRight {
+    right: -16px;
 }
 
-.deleteSmall:hover {
-    opacity: 0.7;
-}
-
-/* Inactive Overlay */
-.inactiveOverlay {
+/* Actions Overlay */
+.ticketActions {
     position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.1);
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.actionsTopRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.deleteIconBtn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #CBD5E1;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.deleteIconBtn:hover {
+    color: #EF4444;
+}
+
+.editIconBtn {
+    background: #F1F5F9;
+    border: none;
+    color: #64748B;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.inactiveStamp {
-    font-size: 18px;
-    font-weight: 900;
-    color: rgba(239, 68, 68, 0.8);
-    border: 3px solid rgba(239, 68, 68, 0.8);
-    padding: 4px 16px;
-    border-radius: 8px;
-    transform: rotate(-15deg);
+.editIconBtn:hover {
+    background: #E2E8F0;
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.ticketToggle {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 18px;
+}
+
+.ticketToggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleRound {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #F1F5F9;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.toggleRound:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.toggleRound {
+    background-color: #22C55E;
+}
+
+input:checked+.toggleRound:before {
+    transform: translateX(14px);
+}
+
+/* Event Variant Detail - COLOR ONLY, no size changes */
+.eventTicket .ticketStub {
+    background: #1E3A8A;
+}
+
+.eventTicket .discountOff,
+.eventTicket .codeText {
+    color: #1E3A8A;
 }
 
 .fab {
@@ -310,9 +412,18 @@
     transform: scale(1.05);
 }
 
-/* Form */
+.emptySmall {
+    text-align: center;
+    padding: 60px;
+    background: white;
+    border-radius: 24px;
+    color: #94A3B8;
+    grid-column: 1 / -1;
+}
+
+/* Modal / Form Styles - Restored */
 .formGroup {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .typeRow {
@@ -322,74 +433,192 @@
 
 .typeChip {
     flex: 1;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    padding: 14px;
+    border: 2px solid #F1F5F9;
+    border-radius: 12px;
     font-size: 13px;
     font-weight: 700;
-    color: var(--text-secondary);
+    color: #64748B;
     text-align: center;
+    border: none;
+    cursor: pointer;
     transition: all 0.2s;
 }
 
-.typeChip:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
 .typeChipActive {
-    background: var(--primary-bg);
-    border-color: var(--primary);
+    background: #EFF6FF;
+    border: 2px solid var(--primary);
     color: var(--primary);
 }
 
-.empty {
-    text-align: center;
-    padding: 60px 0;
-    color: var(--text-secondary);
-}
-
-.emptyIcon {
-    font-size: 48px;
-    display: block;
-    margin-bottom: 12px;
-}
-
-/* ─── iPad / Tablet ─── */
+/* iPad / Tablet */
 @media (max-width: 1024px) {
     .content {
-        padding: 20px;
+        padding: 24px 20px;
+        max-width: 1100px;
+    }
+
+    .tabContainer {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto 40px;
+        display: flex;
+        padding: 8px;
+    }
+
+    .tabBtn {
+        flex: 1;
+        text-align: center;
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .voucherGrid {
+        /* No longer need to force 2 columns here, the min-width: 768px rule handles it */
+        gap: 20px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .horizontalTicket {
+        height: 160px !important;
+        width: 100%;
+    }
+
+    .discountVal {
+        font-size: 32px;
+    }
+
+    .discountFixed {
+        display: none;
+    }
+
+    .discountOff {
+        display: none;
+    }
+
+    .voucherTitle {
+        font-size: 14px;
+    }
+
+    .codeText {
+        font-size: 13px;
+    }
+
+    .ticketMain {
+        padding: 16px 20px;
+    }
+
+    .ticketStub {
+        width: 55px;
     }
 }
 
-/* ─── Mobile ─── */
+/* Mobile */
 @media (max-width: 768px) {
     .header {
-        padding: 24px 20px;
+        padding: 40px 20px 32px;
+    }
+
+    .headerTitle {
+        font-size: 24px;
     }
 
     .content {
         padding: 20px 16px 120px;
     }
 
-    .couponMain {
-        height: 110px;
+    .tabContainer {
+        width: 100%;
+        display: flex;
     }
 
-    .couponName {
-        font-size: 15px;
+    .tabBtn {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 13px;
     }
 
-    .couponStub {
-        width: 70px;
+    .horizontalTicket {
+        height: auto;
+        min-height: 140px;
+        flex-direction: row;
     }
 
-    .stubValue {
-        font-size: 22px;
+    .ticketStub {
+        width: 50px;
+    }
+
+    .stubLabel {
+        font-size: 9px;
+    }
+
+    .ticketMain {
+        padding: 16px 20px;
+    }
+
+    .voucherTitle {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .discountVal {
+        font-size: 30px;
+    }
+
+    .discountFixed {
+        display: none;
+    }
+
+    .discountOff {
+        display: none;
+    }
+
+    .codeRow {
+        gap: 8px;
+    }
+
+    .codeText {
+        font-size: 13px;
+        padding: 2px 8px;
+    }
+
+    .ticketActions {
+        top: 12px;
+        right: 12px;
+        gap: 12px;
+    }
+
+    .deleteIconBtn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .editIconBtn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
     }
 
     .fab {
         bottom: 88px;
         right: 20px;
+        width: 55px;
+        height: 55px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 400px) {
+    .ticketMain {
+        padding: 16px 16px;
+    }
+
+    .discountVal {
+        font-size: 32px;
+    }
+
+    .stubDot {
+        display: none;
     }
 }

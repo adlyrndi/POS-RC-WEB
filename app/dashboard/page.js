@@ -130,19 +130,22 @@ export default function DashboardHome() {
                             ) : (
                                 <>
                                     <div className={styles.demoStatRow}>
-                                        <span className={styles.demoLabel}>Male ({maleCount})</span>
+                                        <span className={styles.demoLabel}>Male</span>
                                         <span className={styles.demoPercent} style={{ color: '#6366F1' }}>{malePercent}%</span>
                                     </div>
                                     <div className={styles.progressBarWrap}>
                                         <div className={styles.progressBar} style={{ width: `${malePercent}%`, background: 'linear-gradient(90deg, #6366F1, #818CF8)' }} />
                                     </div>
+                                    <p className={styles.demoSubtext}>{maleCount} customers today</p>
+
                                     <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
-                                        <span className={styles.demoLabel}>Female ({femaleCount})</span>
+                                        <span className={styles.demoLabel}>Female</span>
                                         <span className={styles.demoPercent} style={{ color: '#22D3EE' }}>{femalePercent}%</span>
                                     </div>
                                     <div className={styles.progressBarWrap}>
                                         <div className={styles.progressBar} style={{ width: `${femalePercent}%`, background: 'linear-gradient(90deg, #22D3EE, #67E8F9)' }} />
                                     </div>
+                                    <p className={styles.demoSubtext}>{femaleCount} customers today</p>
                                 </>
                             )}
                         </div>
@@ -157,22 +160,24 @@ export default function DashboardHome() {
                         </div>
                         <div className={styles.demoBody}>
                             <div className={styles.demoStatRow}>
-                                <span className={styles.demoLabel}>Regular ({regularVoucherCountToday})</span>
+                                <span className={styles.demoLabel}>Regular</span>
                                 <span className={styles.demoPercent} style={{ color: '#F97316' }}>{formatCurrency(regularDiscountToday)}</span>
                             </div>
-                            <div className={styles.progressBarWrap} style={{ marginBottom: 12 }}>
+                            <div className={styles.progressBarWrap}>
                                 <div className={styles.progressBar} style={{ width: `${(regularVoucherCountToday / (regularVoucherCountToday + eventVoucherCountToday || 1)) * 100}%`, background: '#F97316' }} />
                             </div>
+                            <p className={styles.demoSubtext}>{regularVoucherCountToday} redeemed today</p>
 
-                            <div className={styles.demoStatRow}>
-                                <span className={styles.demoLabel}>Event ({eventVoucherCountToday})</span>
+                            <div className={styles.demoStatRow} style={{ marginTop: 12 }}>
+                                <span className={styles.demoLabel}>Event</span>
                                 <span className={styles.demoPercent} style={{ color: '#FB923C' }}>{formatCurrency(eventDiscountToday)}</span>
                             </div>
                             <div className={styles.progressBarWrap}>
                                 <div className={styles.progressBar} style={{ width: `${(eventVoucherCountToday / (regularVoucherCountToday + eventVoucherCountToday || 1)) * 100}%`, background: '#FB923C' }} />
                             </div>
+                            <p className={styles.demoSubtext}>{eventVoucherCountToday} redeemed today</p>
 
-                            <div className={styles.demoSubtext} style={{ marginTop: 8, fontWeight: 700, color: 'var(--text)' }}>
+                            <div className={styles.demoSubtext} style={{ marginTop: 12, fontWeight: 700, color: 'var(--text)' }}>
                                 Total: {regularVoucherCountToday + eventVoucherCountToday} Vouchers
                             </div>
                         </div>
