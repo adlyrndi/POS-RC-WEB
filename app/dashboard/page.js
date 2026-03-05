@@ -97,7 +97,7 @@ export default function DashboardHome() {
                 <div className={styles.headerContent}>
                     <div>
                         <p className={styles.greeting}>Welcome back 👋</p>
-                        <h1 className={styles.userName}>{tenantName || user?.name || 'Admin'}</h1>
+                        <h1 className={styles.userName}>{tenantName || 'Manager'}</h1>
                     </div>
                 </div>
             </div>

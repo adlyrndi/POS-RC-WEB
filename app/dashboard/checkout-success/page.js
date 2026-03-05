@@ -1,16 +1,24 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { useContext, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Suspense } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
+import { CartContext } from '@/context/CartContext';
 import styles from './success.module.css';
 
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 
 function SuccessContent() {
+    const { clearCart } = useContext(CartContext);
     const params = useSearchParams();
+
+    // Clear cart once when landing on this page
+    useEffect(() => {
+        clearCart();
+    }, [clearCart]);
+
     const code = params.get('code') || 'N/A';
     const method = params.get('method') || 'Cash';
     const subtotal = Number(params.get('subtotal')) || 0;

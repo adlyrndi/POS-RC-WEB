@@ -2,7 +2,7 @@
 
 import { useContext, useState, useEffect, useCallback } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-import { productService } from '@/services/api';
+import { productService, getImageUrl } from '@/services/api';
 import { IoAdd, IoClose, IoTrashOutline, IoImageOutline, IoCube } from 'react-icons/io5';
 import Modal from '@/components/Modal';
 import GradientButton from '@/components/GradientButton';
@@ -11,24 +11,8 @@ import styles from './products.module.css';
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
 const IS_DEV = process.env.NODE_ENV === 'development';
 const RAILWAY_URL = 'https://pos-rc-backend-production.up.railway.app';
-const BACKEND_URL = IS_DEV && typeof window !== 'undefined'
-    ? `http://${window.location.hostname}:3000`
-    : RAILWAY_URL;
-
-const getImageUrl = (url) => {
-    if (!url) return '';
-    // If it's a full HTTPS URL (like Supabase storage), use it directly
-    if (url.startsWith('https://')) return url;
-
-    if (url.startsWith('http')) {
-        // Fix for legacy absolute URLs pointing to localhost or production
-        return url.replace(/http:\/\/localhost:(8080|3000)/, BACKEND_URL)
-            .replace('https://pos-rc-backend-production.up.railway.app', BACKEND_URL);
-    }
-    // Handle relative paths (e.g., /uploads/...)
-    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
-    return `${BACKEND_URL.replace(/\/api$/, '')}${cleanUrl}`;
-};
+// Use NEXT_PUBLIC_API_URL from .env.local
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${RAILWAY_URL}/api`;
 
 export default function ProductManagementPage() {
     const { tenantId } = useContext(AuthContext);

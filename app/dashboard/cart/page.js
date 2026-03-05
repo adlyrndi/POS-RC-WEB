@@ -4,13 +4,19 @@ import { useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { CartContext } from '@/context/CartContext';
-import { voucherService, transactionService } from '@/services/api';
-import { IoRemove, IoAdd, IoCloseCircle, IoManOutline, IoWomanOutline } from 'react-icons/io5';
+import { voucherService, transactionService, getImageUrl } from '@/services/api';
+import { IoRemove, IoAdd, IoCloseCircle, IoManOutline, IoWomanOutline, IoCashOutline, IoCardOutline, IoQrCodeOutline, IoTicketOutline, IoCheckmarkCircle } from 'react-icons/io5';
 import GradientButton from '@/components/GradientButton';
+import Modal from '@/components/Modal';
 import styles from './cart.module.css';
 
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
-const PAYMENT_METHODS = ['Cash', 'Debit Card', 'Credit Card', 'E-Wallet'];
+const PAYMENT_METHODS = [
+    { id: 'Cash', label: 'Cash', icon: IoCashOutline },
+    { id: 'Debit', label: 'Debit', icon: IoCardOutline },
+    { id: 'CC', label: 'Credit Card', icon: IoCardOutline },
+    { id: 'QRIS', label: 'QRIS', icon: IoQrCodeOutline },
+];
 
 export default function CartPage() {
     const { tenantId } = useContext(AuthContext);
@@ -61,7 +67,8 @@ export default function CartPage() {
             const res = await transactionService.createTransaction(txData);
             const transaction = res.data;
             const summary = items.map(i => `${i.quantity} ${i.title}`).join(', ');
-            clearCart();
+
+            // Navigate first, clearing will happen on success page or we can do it here after push
             router.push(`/dashboard/checkout-success?code=${transaction.transaction_code}&method=${paymentMethod}&subtotal=${subtotal}&discount=${discount}&reg_discount=${regularDiscount}&event_discount=${eventDiscount}&total=${total}&male=${maleCount}&female=${femaleCount}&items=${itemCount}&summary=${encodeURIComponent(summary)}`);
         } catch (err) {
             alert(err.response?.data?.error || 'Checkout failed');
@@ -89,6 +96,14 @@ export default function CartPage() {
 
     return (
         <div className={styles.container}>
+            {loading && (
+                <div className={styles.loadingOverlay}>
+                    <div className={styles.loaderBox}>
+                        <div className={styles.spinner} />
+                        <p>Processing Transaction...</p>
+                    </div>
+                </div>
+            )}
             <div className={styles.header}>
                 <div className={styles.headerDecor} />
                 <h1 className={styles.headerTitle}>Cart</h1>
@@ -105,7 +120,7 @@ export default function CartPage() {
                                 <div key={item.product_id} className={styles.itemCard}>
                                     <div className={styles.itemImageWrap}>
                                         {item.image_url ? (
-                                            <img src={item.image_url} alt={item.title} className={styles.itemImage} />
+                                            <img src={getImageUrl(item.image_url)} alt={item.title} className={styles.itemImage} />
                                         ) : (
                                             <div className={styles.itemImagePlaceholder}>📦</div>
                                         )}
@@ -139,20 +154,28 @@ export default function CartPage() {
                             <div className={styles.voucherBox}>
                                 <div className={styles.voucherBoxHeader}>
                                     <span className={styles.voucherTypeTag}>REGULAR</span>
-                                    {voucher && <button className={styles.clearVoucherBtn} onClick={() => removeVoucher('regular')}>Remove</button>}
                                 </div>
                                 {voucher ? (
-                                    <div className={styles.voucherAppliedBox}>
-                                        <p className={styles.appliedCode}>{voucher.code}</p>
-                                        <p className={styles.appliedDiscount}>
-                                            {voucher.discount_type === 'percentage' ? `${voucher.discount_amount}%` : formatCurrency(voucher.discount_amount)} OFF
-                                        </p>
+                                    <div className={styles.voucherMinimalCard}>
+                                        <div className={styles.minimalIcon}>
+                                            <IoCheckmarkCircle size={20} />
+                                        </div>
+                                        <div className={styles.minimalInfo}>
+                                            <p className={styles.minimalCode}>{voucher.code}</p>
+                                            <p className={styles.minimalDiscount}>
+                                                {voucher.discount_type === 'percentage' ? `${voucher.discount_amount}%` : formatCurrency(voucher.discount_amount)} OFF
+                                            </p>
+                                        </div>
+                                        <button className={styles.minimalRemove} onClick={() => removeVoucher('regular')}>
+                                            Remove
+                                        </button>
                                     </div>
                                 ) : (
                                     <button
                                         className={`${styles.pickerBtn} ${showVoucherPicker === 'regular' ? styles.pickerBtnActive : ''}`}
                                         onClick={() => setShowVoucherPicker(showVoucherPicker === 'regular' ? null : 'regular')}
                                     >
+                                        <IoTicketOutline size={18} />
                                         Select Regular Voucher
                                     </button>
                                 )}
@@ -162,54 +185,74 @@ export default function CartPage() {
                             <div className={styles.voucherBox}>
                                 <div className={styles.voucherBoxHeader}>
                                     <span className={`${styles.voucherTypeTag} ${styles.eventTag}`}>EVENT</span>
-                                    {eventVoucher && <button className={styles.clearVoucherBtn} onClick={() => removeVoucher('event')}>Remove</button>}
                                 </div>
                                 {eventVoucher ? (
-                                    <div className={`${styles.voucherAppliedBox} ${styles.eventApplied}`}>
-                                        <p className={styles.appliedCode}>{eventVoucher.code}</p>
-                                        <p className={styles.appliedDiscount}>
-                                            {eventVoucher.discount_type === 'percentage' ? `${eventVoucher.discount_amount}%` : formatCurrency(eventVoucher.discount_amount)} OFF
-                                        </p>
+                                    <div className={`${styles.voucherMinimalCard} ${styles.minimalEvent}`}>
+                                        <div className={styles.minimalIcon}>
+                                            <IoCheckmarkCircle size={20} />
+                                        </div>
+                                        <div className={styles.minimalInfo}>
+                                            <p className={styles.minimalCode}>{eventVoucher.code}</p>
+                                            <p className={styles.minimalDiscount}>
+                                                {eventVoucher.discount_type === 'percentage' ? `${eventVoucher.discount_amount}%` : formatCurrency(eventVoucher.discount_amount)} OFF
+                                            </p>
+                                        </div>
+                                        <button className={styles.minimalRemove} onClick={() => removeVoucher('event')}>
+                                            Remove
+                                        </button>
                                     </div>
                                 ) : (
                                     <button
                                         className={`${styles.pickerBtn} ${showVoucherPicker === 'event' ? styles.pickerBtnActive : ''}`}
                                         onClick={() => setShowVoucherPicker(showVoucherPicker === 'event' ? null : 'event')}
                                     >
+                                        <IoTicketOutline size={18} />
                                         Select Event Voucher
                                     </button>
                                 )}
                             </div>
                         </div>
 
-                        {showVoucherPicker && (
-                            <div className={styles.expandedVoucherList}>
-                                <div className={styles.listHeader}>
-                                    Available {showVoucherPicker === 'event' ? 'Event' : 'Regular'} Vouchers
-                                </div>
-                                {vouchers.filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular')).length === 0 ? (
-                                    <p className={styles.noVouchers}>No active {showVoucherPicker} vouchers found</p>
-                                ) : (
-                                    <div className={styles.optionsScroll}>
-                                        {vouchers
-                                            .filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular'))
-                                            .map((v) => (
-                                                <button key={v.id} className={styles.voucherOptionItem} onClick={() => { applyVoucher(v); setShowVoucherPicker(null); }}>
-                                                    <div className={styles.optionInfo}>
-                                                        <span className={styles.optionCode}>{v.code}</span>
-                                                        <span className={styles.optionName}>{v.name}</span>
-                                                    </div>
-                                                    <span className={styles.optionAmount}>
+                    </div>
+
+                    {/* Premium Voucher Modal */}
+                    <Modal
+                        isOpen={!!showVoucherPicker}
+                        onClose={() => setShowVoucherPicker(null)}
+                        title={`Select ${showVoucherPicker === 'event' ? 'Event' : 'Regular'} Voucher`}
+                    >
+                        <div className={styles.modalVoucherList}>
+                            {vouchers.filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular')).length === 0 ? (
+                                <p className={styles.noVouchers}>No active {showVoucherPicker} vouchers found</p>
+                            ) : (
+                                <div className={styles.modalOptionsContainer}>
+                                    {vouchers
+                                        .filter(v => v.category === (showVoucherPicker === 'event' ? 'event' : 'regular'))
+                                        .map((v) => (
+                                            <button
+                                                key={v.id}
+                                                className={styles.modalVoucherItem}
+                                                onClick={() => { applyVoucher(v); setShowVoucherPicker(null); }}
+                                            >
+                                                <div className={styles.modalItemInfo}>
+                                                    <span className={styles.modalItemCode}>{v.code}</span>
+                                                    <span className={styles.modalItemName}>{v.name}</span>
+                                                </div>
+                                                <div className={styles.modalItemRight}>
+                                                    <span className={styles.modalItemAmount}>
                                                         {v.discount_type === 'percentage' ? `${v.discount_amount}%` : formatCurrency(v.discount_amount)}
                                                     </span>
-                                                </button>
-                                            ))
-                                        }
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                                    <div className={styles.selectCircle}>
+                                                        <IoAdd size={16} />
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        ))
+                                    }
+                                </div>
+                            )}
+                        </div>
+                    </Modal>
 
                     {/* Customer Count */}
                     <div className={styles.section}>
@@ -240,15 +283,21 @@ export default function CartPage() {
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}>Payment Method</h3>
                         <div className={styles.paymentGrid}>
-                            {PAYMENT_METHODS.map((method) => (
-                                <button
-                                    key={method}
-                                    className={`${styles.paymentChip} ${paymentMethod === method ? styles.paymentChipActive : ''}`}
-                                    onClick={() => setPaymentMethod(method)}
-                                >
-                                    {method}
-                                </button>
-                            ))}
+                            {PAYMENT_METHODS.map((method) => {
+                                const Icon = method.icon;
+                                return (
+                                    <button
+                                        key={method.id}
+                                        className={`${styles.paymentCard} ${paymentMethod === method.id ? styles.paymentCardActive : ''}`}
+                                        onClick={() => setPaymentMethod(method.id)}
+                                    >
+                                        <div className={styles.paymentIconWrap}>
+                                            <Icon size={24} />
+                                        </div>
+                                        <span className={styles.paymentLabel}>{method.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

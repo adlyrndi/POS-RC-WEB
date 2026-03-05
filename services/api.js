@@ -16,6 +16,33 @@ const api = axios.create({
     headers: { 'Content-Type': 'application/json' },
 });
 
+export const getImageUrl = (url) => {
+    if (!url) return '';
+
+    // 1. Pass through legitimate external URLs (Supabase)
+    if (url.includes('supabase.co')) return url;
+    if (url.startsWith('https://') && !url.includes('up.railway.app')) return url;
+
+    // 2. Extract path (already cleaned by migration, but handles old leftovers too)
+    let path = url;
+    if (url.includes('localhost:') || url.includes('up.railway.app')) {
+        try {
+            const urlObj = new URL(url);
+            path = urlObj.pathname;
+        } catch (e) {
+            path = url.split('/uploads/')[1] ? `/uploads/${url.split('/uploads/')[1]}` : url;
+        }
+    }
+
+    // 3. Ensure path starts with /uploads/
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const finalPath = cleanPath.startsWith('/uploads/') ? cleanPath : `/uploads${cleanPath}`;
+
+    // 4. Combine with current backend URL (stripped of /api)
+    const backendUrl = BASE_URL.replace(/\/api$/, '');
+    return `${backendUrl}${finalPath}`;
+};
+
 // Auth header interceptor
 api.interceptors.request.use((config) => {
     if (typeof window !== 'undefined') {

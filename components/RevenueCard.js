@@ -13,7 +13,7 @@ export default function RevenueCard({
     trend = 0,
     trendLabel = "Today"
 }) {
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
     const isPositive = trend >= 0;
 
     return (

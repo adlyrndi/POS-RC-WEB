@@ -129,8 +129,14 @@ export default function TransactionHistoryPage() {
                                             </div>
                                             {tx.discount > 0 && (
                                                 <div className={styles.detailRow}>
-                                                    <span className={styles.detailLabel}>Discount</span>
+                                                    <span className={styles.detailLabel}>Voucher Discount</span>
                                                     <span className={styles.detailValueDanger}>-{formatCurrency(tx.discount)}</span>
+                                                </div>
+                                            )}
+                                            {tx.event_discount > 0 && (
+                                                <div className={styles.detailRow}>
+                                                    <span className={styles.detailLabel}>Event Discount</span>
+                                                    <span className={styles.detailValueDanger}>-{formatCurrency(tx.event_discount)}</span>
                                                 </div>
                                             )}
                                             <div className={styles.totalRow}>
