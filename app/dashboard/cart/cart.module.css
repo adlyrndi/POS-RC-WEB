@@ -507,66 +507,65 @@
     color: var(--text);
 }
 
-/* Payment Method - New Premium Component */
+/* Payment Method - Compact Premium High-Fidelity UI */
 .paymentGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    padding: 2px;
 }
 
 .paymentCard {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 20px 16px;
-    background: #FFF;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    gap: 12px;
+    padding: 24px 16px;
+    background: #F8FAFC;
+    border: 2px solid transparent;
+    border-radius: 20px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 
 .paymentCard:hover {
-    border-color: var(--primary);
+    background: #F1F5F9;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
 }
 
 .paymentCardActive {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-color: var(--primary);
-    border-width: 2px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    background: #F8FAFC;
+    border-color: #2563eb;
 }
 
 .paymentIconWrap {
-    width: 48px;
-    height: 48px;
-    background: #f8fafc;
-    border-radius: 12px;
+    width: 56px;
+    height: 56px;
+    background: #E2E8F0;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-secondary);
-    transition: all 0.2s;
+    color: #64748B;
+    transition: all 0.3s ease;
 }
 
 .paymentCardActive .paymentIconWrap {
-    background: var(--primary);
+    background: #2563EB;
     color: #FFF;
-    transform: scale(1.1);
 }
 
 .paymentLabel {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
+    font-size: 15px;
+    font-weight: 800;
+    color: #64748B;
+    transition: all 0.3s ease;
 }
 
 .paymentCardActive .paymentLabel {
-    color: var(--primary);
+    color: #2563EB;
 }
 
 /* Voucher Ticket UI */

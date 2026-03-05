@@ -91,7 +91,7 @@
 }
 
 .backBtn {
-    display: inline-block;
+    display: block;
     padding: 14px 32px;
     background: var(--gradient);
     color: #FFF;
@@ -99,8 +99,27 @@
     font-weight: 700;
     border-radius: var(--radius-lg);
     transition: opacity 0.2s;
+    margin-bottom: 12px;
 }
 
 .backBtn:hover {
     opacity: 0.9;
+}
+
+.printBtn {
+    display: block;
+    width: 100%;
+    padding: 14px 32px;
+    background: #F59E0B;
+    color: #FFF;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: var(--radius-lg);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.printBtn:hover {
+    background: #D97706;
 }

@@ -46,6 +46,13 @@ export default function CartPage() {
 
     const handleCheckout = async () => {
         if (items.length === 0) return;
+
+        // Mandatory gender selection check
+        if ((maleCount + femaleCount) === 0) {
+            alert('Please select at least 1 person (Male or Female) before checkout.');
+            return;
+        }
+
         setLoading(true);
         try {
             const txData = {
@@ -292,7 +299,7 @@ export default function CartPage() {
                                         onClick={() => setPaymentMethod(method.id)}
                                     >
                                         <div className={styles.paymentIconWrap}>
-                                            <Icon size={24} />
+                                            <Icon size={32} />
                                         </div>
                                         <span className={styles.paymentLabel}>{method.label}</span>
                                     </button>
@@ -322,7 +329,7 @@ export default function CartPage() {
                         </div>
                         <div className={styles.summaryRow}>
                             <span>Payment</span>
-                            <span>{paymentMethod}</span>
+                            <span>{PAYMENT_METHODS.find(m => m.id === paymentMethod)?.label || paymentMethod}</span>
                         </div>
                         {regularDiscount > 0 && (
                             <div className={`${styles.summaryRow} ${styles.discountRow}`}>

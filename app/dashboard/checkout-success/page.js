@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import { CartContext } from '@/context/CartContext';
+import { BluetoothPrinter } from '@/utils/bluetoothPrinter';
 import styles from './success.module.css';
 
 const formatCurrency = (n) => `IDR ${Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits: 2 })}`;
@@ -30,6 +31,18 @@ function SuccessContent() {
     const female = params.get('female') || '0';
     const itemsCount = params.get('items') || '0';
     const summary = params.get('summary') || '';
+
+    const handlePrint = async () => {
+        await BluetoothPrinter.printReceipt({
+            code,
+            method,
+            total,
+            subtotal,
+            discount,
+            itemsCount,
+            summary
+        });
+    };
 
     return (
         <div className={styles.container}>
@@ -99,6 +112,10 @@ function SuccessContent() {
                 <Link href="/dashboard/pos" className={styles.backBtn}>
                     Back to POS
                 </Link>
+
+                <button onClick={handlePrint} className={styles.printBtn}>
+                    Print Receipt
+                </button>
             </div>
         </div>
     );
