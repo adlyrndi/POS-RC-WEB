@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
-const RAILWAY_URL = 'pos-rc-backend-production-fb82.up.railway.app';
+const RAILWAY_URL = 'https://pos-rc-backend-production-fb82.up.railway.app';
 
 // Use NEXT_PUBLIC_API_URL from .env.local in dev, otherwise fallback to Railway
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || RAILWAY_URL;
